@@ -7,3 +7,16 @@
 .row {
     display: flex;
 }
+
+body {
+    text-align: center;
+    background-color: #fef9ee;
+}
+
+#container {
+    width: fit-content;;
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}

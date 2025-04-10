@@ -5,9 +5,10 @@ const objects = [
 ]
 
 // Create the grid in the DOM and fill the grid with random items
-export function initGrid(gridValues, n) {
+export function initGrid(n) {
     const grid = document.createElement('div');
     grid.id = 'grid';
+    let points = 0;
 
     for (let i = 0; i < n; i++) {
         let row = document.createElement('div');
@@ -19,16 +20,19 @@ export function initGrid(gridValues, n) {
             cell.className = 'cell cell-' + i + '-' + j;
 
             // Append a random object in the cell
-            let img = document.createElement('img');
-            let value = Math.floor(Math.random() * objects.length);
+            const img = document.createElement('img');
+            const value = Math.floor(Math.random() * objects.length);
             img.src = 'assets/' + objects[value];
             cell.appendChild(img);
-            gridValues[i][j] = value;
+            cell.setAttribute('value', value);
+            points += value + 1;
 
             // Append to the row
             row.append(cell);
         }
     }
+
+    grid.setAttribute('points', points);
     return grid;
 }
 
@@ -59,24 +63,42 @@ export function move(event, row, col, farmer, grid, n) {
     }
 }
 
-export function action(row, col, grid, gridValues) {
-    const position = grid.getElementsByClassName('cell-' + row + '-' + col)[0];
+export function action(row, col, grid, points) {
+    const cell = grid.getElementsByClassName('cell-' + row + '-' + col)[0];
 
     // Update the currentValue
-    let currentValue = gridValues[row][col];
+    let currentValue = cell.getAttribute('value');
     if (currentValue >= 0) {
         currentValue = currentValue - 1;
+
+        const value = Number(points.getAttribute('value')) + 1;
+        const current = Number(points.getAttribute('current')) + 1;
+        points.setAttribute('value', value);
+        points.setAttribute('current', current);
+        points.innerText = `Points: ${value}`;
     }
 
     // Hide or change the img of the object
-    if (position.firstChild) {
+    if (cell.firstChild) {
         if (currentValue < 0) {
-            position.firstChild.src = '';
-            position.children[0].style.display = 'none';
+            cell.firstChild.src = '';
+            cell.children[0].style.display = 'none';
         } else {
-            position.firstChild.src = 'assets/' + objects[currentValue];
+            cell.firstChild.src = 'assets/' + objects[currentValue];
         }
     }
 
-    gridValues[row][col] = currentValue;    // Update the value in the grid
+    cell.setAttribute('value', currentValue);
+}
+
+export function createFarmer(grid) {
+    const farmer = document.createElement('img');
+    farmer.id = 'farmer';
+    farmer.src = 'assets/farmer.svg';
+    farmer.height = 25;
+    const firstCell = grid.getElementsByClassName('cell-0-0')[0];
+    firstCell.children[0].style.display = 'none';
+    firstCell.appendChild(farmer);
+
+    return farmer;
 }

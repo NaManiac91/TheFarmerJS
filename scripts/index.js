@@ -1,26 +1,20 @@
-import {initGrid, move, action, createFarmer} from "./game-ingine.mjs";
+import {action, createFarmer, initGrid, move} from "./game-ingine.mjs";
+import {createTimer, initPoints} from "./ui-factory.mjs";
 
 // Init core items
 const container = document.getElementById('container');
+const timer = document.getElementById('timer');
 const points = document.getElementById('points');
 const leaderboard = document.getElementById('leaderboard');
 let gridSize = 5;
+let currentPoints = 0;
 
 // Init UI
 // Init points and leaderboard
-points.setAttribute('value', 0);
-points.innerText = 'Points: 0';
-let currentPoints = 0;
-let record = JSON.parse(localStorage.getItem("Record"));
-if (!record) {
-    record = {name: 'Pippo', value: 1};
-    localStorage.setItem("Record", JSON.stringify(record));
-}
+initPoints(points, leaderboard);
 
-const p = document.createElement('p');
-p.innerText = `${record.name}: ${record.value}`;
-let topScore = record.value;
-leaderboard.appendChild(p);
+// Init timer
+createTimer(timer);
 
 // Init grid
 let grid = initGrid(gridSize);
@@ -46,6 +40,15 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+function reloadGrid() {
+    points.setAttribute('current', 0);
+    container.removeChild(container.firstChild);
+    grid = initGrid(gridSize);
+    gridScore = grid.getAttribute('points');
+    container.appendChild(grid);
+    farmer = createFarmer(grid);
+}
+
 document.addEventListener('keyup', (e) => {
     e.preventDefault();
 
@@ -53,21 +56,10 @@ document.addEventListener('keyup', (e) => {
         farmer.src = 'assets/farmer.svg';
 
         if (points.getAttribute('current') === gridScore) {
-            // TO DO update only when timer is finished
-            if (gridScore > topScore) {
-                topScore = gridScore
-                localStorage.setItem("Record", JSON.stringify({name: 'Pippo', value: Number(grid.getAttribute('points'))}));
-                p.innerText = `${record.name}: ${topScore}`;
-            }
-
             // Reload the grid with a new level
-            gridSize++;
-            points.setAttribute('current', 0);
-            container.removeChild(container.firstChild);
-            grid = initGrid(gridSize);
-            gridScore = grid.getAttribute('points');
-            container.appendChild(grid);
-            farmer = createFarmer(grid);
+            if (gridSize < 10)
+                gridSize++;
+            reloadGrid();
         }
     }
 });

@@ -23,10 +23,10 @@ body {
 
 #timer {
     font-family: 'Courier New', Courier, monospace;
-    color: #F44336;
+    color: #6dc973;
     background-color: #111;
     border-radius: 5px;
-    box-shadow: 0 0 7px #3F51B5, inset 0 0 10px #2196F3;
+    border: #6dc973 1px solid;
     letter-spacing: 5px;
     width: 40px;
     text-align: center;

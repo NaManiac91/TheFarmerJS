@@ -7,10 +7,20 @@
 </head>
 <body>
     <img src="assets/Logo.jpeg" alt="farmer logo" height="200">
-    <div id="timer"></div>
-    <div id="points"></div>
+    <div id="player">
+        <input type="text" id="player-name" placeholder="Player Name"/>
+        <button id="player-button" disabled>Save</button>
+    </div>
+    <div id="timer" style="display: none"></div>
+    <p id="points"></p>
     <div id="container"></div>
-    <div id="leaderboard"></div>
+    <div id="game-over" style="display: none">
+        <p>Game Over!!!</p>
+        <button id="restart">Restart</button>
+    </div>
+    <div id="leaderboard">
+        <p id="record"></p>
+    </div>
 </body>
 </html>
 <script type="module" src="scripts/index.js"></script>

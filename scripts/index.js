@@ -1,4 +1,13 @@
-import {action, createFarmer, initGrid, levelUp, move, createTimer, initPoints, reset} from "./game-ingine.mjs";
+import {
+    action,
+    createFarmer,
+    initGrid,
+    levelUp,
+    move,
+    createTimer,
+    initPoints,
+    reloadGrid
+} from "./game-ingine.mjs";
 
 // Init core items
 const player = document.getElementById('player');
@@ -6,6 +15,7 @@ const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
 
+// Add events to the button in the UI
 playerName.addEventListener('input', () => {
     saveButton.disabled = !playerName.value;
 });
@@ -16,66 +26,59 @@ saveButton.addEventListener('click', () => {
 });
 
 restart.addEventListener('click', () => {
-    reset();
-    init();
+    location.reload();
 });
 
-
+// Let's go with the game
 function init() {
-    const container = document.getElementById('container');
     const timer = document.getElementById('timer');
     const points = document.getElementById('points');
-    const leaderboard = document.getElementById('leaderboard');
-    // Init UI
+
 // Init points and leaderboard
-    initPoints(points, leaderboard);
+    initPoints();
 
 // Init timer
     createTimer(timer);
 
 // Init grid
-    let grid = initGrid();
-    let gridScore = grid.getAttribute('points');
-    container.appendChild(grid);
+    let gridScore = initGrid();
 
 // Init farmer position
-    let farmer = createFarmer(grid);
+    let farmer = createFarmer(document.getElementById('grid'));
 
 // Init events for the game engine
     document.addEventListener('keydown', (e) => {
+        // Avoid double click
+        if (e.defaultPrevented) return;
         e.preventDefault();
 
+        // Get the current position
         const coordinates = farmer.parentElement.className.split('-');
         let row = Number(coordinates[1]);
         let col = Number(coordinates[2]);
 
+        // Operation allowed: Movement and action
         if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
-            move(e, row, col, farmer, grid);
+            move(e, row, col, farmer);
         } else if (e.code === 'Space') {
             farmer.src = 'assets/farmer2.svg';
-            action(row, col, grid, points);
+            action(row, col);
         }
     });
-
-    function reloadGrid() {
-        points.setAttribute('current', 0);
-        container.removeChild(container.firstChild);
-        grid = initGrid();
-        gridScore = grid.getAttribute('points');
-        container.appendChild(grid);
-        farmer = createFarmer(grid);
-    }
 
     document.addEventListener('keyup', (e) => {
         e.preventDefault();
 
+        // If we have an action check the state of the game
         if (e.code === 'Space') {
             farmer.src = 'assets/farmer.svg';
 
-            if (points.getAttribute('current') === gridScore) {
-                // Reload the grid with a new level
+            // Reload the grid with a new level
+            if (Number(points.getAttribute('current')) >= gridScore) {
                 levelUp();
-                reloadGrid();
+                gridScore = reloadGrid();
+                farmer.remove();
+                farmer = createFarmer(document.getElementById('grid'));
             }
         }
     });

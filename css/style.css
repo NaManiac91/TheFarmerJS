@@ -67,6 +67,10 @@ body {
     padding-top: 5px;
 }
 
+.with-border img {
+    border: 1px solid;
+}
+
 /* Define the blinking keyframes */
 @keyframes blink-animation {
     0% {

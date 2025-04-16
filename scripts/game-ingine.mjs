@@ -38,12 +38,13 @@ export function initGrid() {
 
     for (let i = 0; i < gridSize; i++) {
         let row = document.createElement('div');
-        row.className = 'row';
+        row.classList.add('row');
         grid.append(row);
         for (let j = 0; j < gridSize; j++) {
             // Create cell
             let cell = document.createElement('div');
-            cell.className = 'cell cell-' + i + '-' + j;
+            cell.id = 'cell-' + i + '-' + j;
+            cell.classList.add('cell');
 
             // Append a random object in the cell
             const img = document.createElement('img');
@@ -62,6 +63,7 @@ export function initGrid() {
                     value = Math.floor(Math.random() * bonus.length)
                     object = bonus[value];
                     cell.setAttribute('isBonus', true);
+                    img.classList.add('blink');
                 }
             } else {    // Otherwise a diggable object
                 value = Math.floor(Math.random() * objects.length)
@@ -102,11 +104,12 @@ export function initPoints() {
     points.innerText = 'Points: 0';
 
     pRecord.id = 'record';
-    pRecord.innerText = `${record.name}: ${record.value}`;
+    pRecord.setAttribute('points', record.value);
+    pRecord.innerText = `Best Score - ${record.name}: ${record.value}`;
 }
 
 // Update the Record
-function updateRecord() {
+export function updateRecord() {
     const record = JSON.parse(localStorage.getItem("Record"));
     const currentScore = Number(points.getAttribute('value'));
     if (currentScore > record.value) {
@@ -114,9 +117,15 @@ function updateRecord() {
         record.name = playerName.value;
         localStorage.setItem("Record", JSON.stringify(record));
         pRecord.innerText = `${record.name}: ${currentScore}`;
+        pRecord.setAttribute('points', currentScore);
+
+        // Show that a new record is in place
+        const span = document.createElement('span');
+        span.id = 'new-record';
+        span.classList.add('blink');
+        span.innerText = 'New Record!!!';
+        pRecord.after(span);
     }
-    document.getElementById('grid').remove();
-    gameOver.style.display = 'block';
 }
 
 // Create the timer
@@ -140,52 +149,56 @@ export function createTimer(timerDisplay) {
 function endGame() {
     clearInterval(countdown);
     updateRecord();     // Update record if needed
+    document.getElementById('grid').remove();
+    gameOver.style.display = 'block';
 }
 
 // Define the movement
 export function move(event, row, col, farmer) {
-    const currentPosition = document.getElementsByClassName('cell-' + row + '-' + col)[0];
-    currentPosition.children[0].style.display = 'block';    // show the object "behind" the farmer
+    const currentPosition = document.getElementById('cell-' + row + '-' + col);
+    if (currentPosition.children.length > 0) {
+        currentPosition.children[0].style.display = 'block';    // show the object "behind" the farmer
 
-    switch (event.keyCode) {
-        case 37:    // left
-            col -= 1;
-            break;
-        case 38:    // top
-            row -= 1;
-            break;
-        case 39:    // right
-            col += 1;
-            break;
-        case 40:    // bottom
-            row += 1;
-            break;
-    }
-
-    // Moving the farmer if the movement is allowed
-    if (col < gridSize && col >= 0 && row >= 0 && row < gridSize) {
-        const newPosition = document.getElementsByClassName('cell-' + row + '-' + col)[0];
-
-        // Check if is a bomb
-        if (newPosition.getAttribute('isMalus')) {
-            endGame();
+        switch (event.keyCode) {
+            case 37:    // left
+                col -= 1;
+                break;
+            case 38:    // top
+                row -= 1;
+                break;
+            case 39:    // right
+                col += 1;
+                break;
+            case 40:    // bottom
+                row += 1;
+                break;
         }
 
-        newPosition.children[0].style.display = 'none';
-        newPosition.appendChild(farmer);
-    } else {
-        currentPosition.children[0].style.display = 'none';
+        // Moving the farmer if the movement is allowed
+        if (col < gridSize && col >= 0 && row >= 0 && row < gridSize) {
+            const newPosition = document.getElementById('cell-' + row + '-' + col);
+
+            // Check if is a bomb
+            if (newPosition.hasAttribute('isMalus')) {
+                endGame();
+            }
+
+            newPosition.children[0].style.display = 'none';
+            newPosition.appendChild(farmer);
+        } else {
+            currentPosition.children[0].style.display = 'none';
+        }
     }
 }
 
 // Define the action
 export function action(row, col) {
     // Get the current cell info
-    const cell = document.getElementsByClassName('cell-' + row + '-' + col)[0];
+    const cell = document.getElementById('cell-' + row + '-' + col);
     let currentValue = Number(cell.getAttribute('value'));
 
     // Check if the cell contains a bonus or an object
-    if (cell.getAttribute('isBonus')) {
+    if (cell.hasAttribute('isBonus')) {
         if (currentValue === 0) {    // is a +10s
             timeLeft += 10;     // add 30 extra seconds to the timer
         } else if (currentValue === 1) {
@@ -228,7 +241,7 @@ export function createFarmer(grid) {
     farmer.id = 'farmer';
     farmer.src = 'assets/farmer.svg';
     farmer.height = 25;
-    const firstCell = grid.getElementsByClassName('cell-0-0')[0];
+    const firstCell = document.getElementById('cell-0-0');
     firstCell.children[0].style.display = 'none';
     firstCell.appendChild(farmer);
 

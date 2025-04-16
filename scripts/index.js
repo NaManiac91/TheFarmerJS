@@ -6,7 +6,8 @@ import {
     move,
     createTimer,
     initPoints,
-    reloadGrid
+    reloadGrid,
+    updateRecord
 } from "./game-ingine.mjs";
 
 // Init core items
@@ -53,7 +54,7 @@ function init() {
         e.preventDefault();
 
         // Get the current position
-        const coordinates = farmer.parentElement.className.split('-');
+        const coordinates = farmer.parentElement.id.split('-');
         let row = Number(coordinates[1]);
         let col = Number(coordinates[2]);
 

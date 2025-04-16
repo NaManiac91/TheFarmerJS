@@ -35,3 +35,47 @@ body {
     position: relative;
     padding-left: 5px
 }
+
+#legend div span {
+    position: relative;
+    top: -5px;
+}
+
+.cell[isbonus='true'][value='1'] {
+    background-color: gold;
+}
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
+#new-record {
+    background-color: rgba(109, 201, 115, 0.5);
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-left: 20px;
+}
+
+#leaderboard {
+    margin-top: 20px;
+}
+
+#legend h3 {
+    border-top: 5px ridge #6ac670;
+    padding-top: 5px;
+}
+
+/* Define the blinking keyframes */
+@keyframes blink-animation {
+    0% {
+        visibility: visible;
+    }
+    50% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}

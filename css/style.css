@@ -1,6 +1,6 @@
 .cell {
-    height: 25px;
-    width: 25px;
+    height: 35px;
+    width: 35px;
     border: 1px solid black;
 }
 
@@ -11,13 +11,24 @@
 body {
     text-align: center;
     background-color: #fef9ee;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+img, video, iframe {
+    max-width: 100%;
+    display: block;
+}
+
+.cell img {
+    height: inherit;
 }
 
 #container {
     width: fit-content;;
     height: auto;
     margin: 0 auto;
-    padding: 10px;
     position: relative;
 }
 
@@ -38,7 +49,7 @@ body {
 
 #legend div span {
     position: relative;
-    top: -5px;
+    top: -20px;
 }
 
 .cell[isbonus='true'][value='1'] {
@@ -67,6 +78,10 @@ body {
     padding-top: 5px;
 }
 
+#legend img {
+    margin-left: 25%;
+}
+
 .with-border img {
     border: 1px solid;
 }
@@ -81,5 +96,23 @@ body {
     }
     100% {
         visibility: visible;
+    }
+}
+
+/* Styles for screens 600px and wider */
+@media (min-width: 600px) {
+    body {
+        padding: 20px;
+    }
+
+    #logo {
+        height: 200px;
+        display: initial;
+    }
+}
+
+@media (max-width: 360px) {
+    body {
+        font-size: smaller;
     }
 }

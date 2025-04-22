@@ -6,12 +6,24 @@ import {
     move,
     createTimer,
     initPoints,
-    reloadGrid,
-    updateRecord
+    reloadGrid
 } from "./game-ingine.mjs";
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/scripts/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+    });
+}
 
 // Init core items
 const player = document.getElementById('player');
+const legend = document.getElementById('legend');
 const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
@@ -24,6 +36,7 @@ playerName.addEventListener('input', () => {
 saveButton.addEventListener('click', () => {
     init();
     player.remove();
+    legend.remove();
 });
 
 restart.addEventListener('click', () => {
@@ -45,7 +58,7 @@ function init() {
     let gridScore = initGrid();
 
 // Init farmer position
-    let farmer = createFarmer(document.getElementById('grid'));
+    let farmer = createFarmer();
 
 // Init events for the game engine
     document.addEventListener('keydown', (e) => {
@@ -62,7 +75,7 @@ function init() {
         if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
             move(e, row, col, farmer);
         } else if (e.code === 'Space') {
-            farmer.src = 'assets/farmer2.svg';
+            farmer.src = 'assets/ui/farmer2.svg';
             action(row, col);
         }
     });
@@ -72,14 +85,14 @@ function init() {
 
         // If we have an action check the state of the game
         if (e.code === 'Space') {
-            farmer.src = 'assets/farmer.svg';
+            farmer.src = 'assets/ui/farmer.svg';
 
             // Reload the grid with a new level
             if (Number(points.getAttribute('current')) >= gridScore) {
                 levelUp();
                 gridScore = reloadGrid();
                 farmer.remove();
-                farmer = createFarmer(document.getElementById('grid'));
+                farmer = createFarmer();
             }
         }
     });

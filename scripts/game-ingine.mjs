@@ -71,7 +71,7 @@ export function initGrid() {
             }
 
             // Setup object img
-            img.src = 'assets/' + object;
+            img.src = 'assets/ui/' + object;
             cell.appendChild(img);
 
             // Update gridScore
@@ -230,17 +230,16 @@ export function action(row, col) {
             cell.firstChild.src = '';
             cell.children[0].style.display = 'none';
         } else {
-            cell.firstChild.src = 'assets/' + objects[currentValue];
+            cell.firstChild.src = 'assets/ui/' + objects[currentValue];
         }
     }
 }
 
 // Return the farmer
-export function createFarmer(grid) {
+export function createFarmer() {
     const farmer = document.createElement('img');
     farmer.id = 'farmer';
-    farmer.src = 'assets/farmer.svg';
-    farmer.height = 25;
+    farmer.src = 'assets/ui/farmer.svg';
     const firstCell = document.getElementById('cell-0-0');
     firstCell.children[0].style.display = 'none';
     firstCell.appendChild(farmer);
@@ -250,7 +249,7 @@ export function createFarmer(grid) {
 
 // Define the levelUp condition
 export function levelUp() {
-    if (gridSize < 10) {
+    if (gridSize < 9) {
         gridSize++;     // update the size  of the grid
     }
     level++;            // update the level

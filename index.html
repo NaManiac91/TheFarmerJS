@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>The Farmer</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3367D6">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/ui/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <img src="assets/Logo.jpeg" alt="farmer logo" height="200">
+    <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
     <div id="player">
         <input type="text" id="player-name" placeholder="Player Name"/>
         <button id="player-button" disabled>Save</button>
@@ -25,20 +28,20 @@
     <div id="legend">
         <h3>Legend</h3>
         <div class="with-border">
-            <img src="assets/arrow-move.svg" alt="legend image" width="25"><span> Movement</span>
-            <img src="assets/space-key.svg" alt="legend image" width="25"><span> Action</span>
+            <img src="assets/ui/arrow-move.svg" alt="legend image" width="35"><span> Movement</span>
+            <img src="assets/ui/space-key.svg" alt="legend image" width="35"><span> Action</span>
         </div>
         <div>
-            <img src="assets/seedling.svg" alt="legend image" width="25"><span> 1</span>
-            <img src="assets/wood.svg" alt="legend image" width="25"><span> 2</span>
-            <img src="assets/rock.svg" alt="legend image" width="25"><span> 3</span>
+            <img src="assets/ui/seedling.svg" alt="legend image" width="35"><span> 1</span>
+            <img src="assets/ui/wood.svg" alt="legend image" width="35"><span> 2</span>
+            <img src="assets/ui/rock.svg" alt="legend image" width="35"><span> 3</span>
         </div>
         <div>
-            <img src="assets/10-seconds.svg" alt="legend image" width="25"><span> + 10 Seconds</span>
-            <img src="assets/spade.svg" alt="legend image" width="25"><span> Win the level</span>
+            <img src="assets/ui/10-seconds.svg" alt="legend image" width="35"><span> + 10 Seconds</span>
+            <img src="assets/ui/spade.svg" alt="legend image" width="35"><span> Win the level</span>
         </div>
         <div>
-            <img src="assets/bomb.svg" alt="legend image" width="25"><span> KABOOM!!</span>
+            <img src="assets/ui/bomb.svg" alt="legend image" width="35"><span> KABOOM!!</span>
         </div>
     </div>
 </body>

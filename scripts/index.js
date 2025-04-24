@@ -27,6 +27,7 @@ const legend = document.getElementById('legend');
 const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
+const logo = document.getElementById('logo');
 
 // Add events to the button in the UI
 playerName.addEventListener('input', () => {
@@ -35,8 +36,12 @@ playerName.addEventListener('input', () => {
 
 saveButton.addEventListener('click', () => {
     init();
+
+    /* Define the game layout */
     player.remove();
     legend.remove();
+    logo.style.height = '120px';
+    logo.style.marginLeft = '18%';
 });
 
 restart.addEventListener('click', () => {

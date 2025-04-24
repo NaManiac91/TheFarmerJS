@@ -104,11 +104,6 @@ img, video, iframe {
     body {
         padding: 20px;
     }
-
-    #logo {
-        height: 200px;
-        display: initial;
-    }
 }
 
 @media (max-width: 360px) {

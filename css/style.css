@@ -119,16 +119,16 @@ img, video, iframe {
 
 #action-buttons {
     position: fixed;
-    bottom: 100px;
-    right: 40px;
+    bottom: 70px;
+    right: 20px;
     z-index: 10;
     display: flex;
     gap: 15px;
 }
 
 #action-buttons button {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     font-size: 1.5em;
     border: 2px solid grey;
@@ -146,8 +146,8 @@ img, video, iframe {
 
 #dpad-container {
     position: fixed; /* Keep it in place */
-    bottom: 40px;
-    left: 40px;
+    bottom: 20px;
+    left: 20px;
     width: 150px; /* Adjust size as needed */
     height: 150px;
     z-index: 10; /* On top */

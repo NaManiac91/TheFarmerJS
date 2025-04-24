@@ -154,22 +154,22 @@ function endGame() {
 }
 
 // Define the movement
-export function move(event, row, col, farmer) {
+export function move(keyCode, row, col, farmer) {
     const currentPosition = document.getElementById('cell-' + row + '-' + col);
     if (currentPosition.children.length > 0) {
         currentPosition.children[0].style.display = 'block';    // show the object "behind" the farmer
 
-        switch (event.keyCode) {
-            case 37:    // left
+        switch (keyCode) {
+            case 'ArrowLeft':    // left 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'
                 col -= 1;
                 break;
-            case 38:    // top
+            case 'ArrowUp':    // top
                 row -= 1;
                 break;
-            case 39:    // right
+            case 'ArrowRight':    // right
                 col += 1;
                 break;
-            case 40:    // bottom
+            case 'ArrowDown':    // bottom
                 row += 1;
                 break;
         }

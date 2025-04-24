@@ -116,3 +116,101 @@ img, video, iframe {
         font-size: smaller;
     }
 }
+
+#action-buttons {
+    position: fixed;
+    bottom: 100px;
+    right: 40px;
+    z-index: 10;
+    display: flex;
+    gap: 15px;
+}
+
+#action-buttons button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.5em;
+    border: 2px solid grey;
+    background-color: rgba(100, 100, 100, 0.6);
+    color: white;
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+}
+
+/* Add :active pseudo-class for simple press feedback */
+#action-buttons button:active {
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+#dpad-container {
+    position: fixed; /* Keep it in place */
+    bottom: 40px;
+    left: 40px;
+    width: 150px; /* Adjust size as needed */
+    height: 150px;
+    z-index: 10; /* On top */
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE */
+    transform: scale(1.2); /* Optional: Make it slightly bigger */
+    transform-origin: bottom left;
+}
+
+.dpad-button {
+    position: absolute;
+    width: 50px; /* Width of each arrow button */
+    height: 50px; /* Height of each arrow button */
+    background-color: rgba(100, 100, 100, 0.7);
+    border: 1px solid #555;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer; /* For desktop debugging */
+    box-sizing: border-box;
+}
+
+/* Positioning the buttons */
+#dpad-up {
+    top: 0;
+    left: 50px;
+    border-radius: 10px 10px 0 0;
+}
+
+#dpad-down {
+    bottom: 0;
+    left: 50px;
+    border-radius: 0 0 10px 10px;
+}
+
+#dpad-left {
+    top: 50px;
+    left: 0;
+    border-radius: 10px 0 0 10px;
+}
+
+#dpad-right {
+    top: 50px;
+    right: 0;
+    border-radius: 0 10px 10px 0;
+}
+
+#dpad-center { /* Optional visual center */
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(80, 80, 80, 0.6);
+    /* border-radius: 50%; */ /* Make it round if desired */
+}
+
+
+/* Visual feedback on press (works for touch and mouse) */
+.dpad-button:active {
+    background-color: rgba(180, 180, 180, 0.8);
+}

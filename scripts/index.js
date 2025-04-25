@@ -28,6 +28,11 @@ const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
 const logo = document.getElementById('logo');
+const isMobile = window.matchMedia('(max-width: 480px)').matches || window.matchMedia('(max-width: 768px)').matches;
+
+if (isMobile) {
+    logo.style.height = '120px';
+}
 
 // Add events to the button in the UI
 playerName.addEventListener('input', () => {
@@ -40,8 +45,6 @@ saveButton.addEventListener('click', () => {
     /* Define the game layout */
     player.remove();
     legend.remove();
-    logo.style.height = '120px';
-    logo.style.marginLeft = '18%';
 });
 
 restart.addEventListener('click', () => {
@@ -105,7 +108,7 @@ function init() {
 
     /* Pad Logic */
     // Check if is a mobile device
-    if (window.matchMedia('(max-width: 480px)') || window.matchMedia('(max-width: 768px)')) {
+    if (isMobile) {
         document.getElementById('pad').style.display = 'block';
         const upButton = document.getElementById('dpad-up');
         const downButton = document.getElementById('dpad-down');

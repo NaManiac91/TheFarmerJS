@@ -35,6 +35,7 @@ export function initGrid() {
     const grid = document.createElement('div');
     grid.id = 'grid';
     let points = 0;
+    let gold = false;
 
     for (let i = 0; i < gridSize; i++) {
         let row = document.createElement('div');
@@ -60,7 +61,14 @@ export function initGrid() {
                     object = malus[0];
                     cell.setAttribute('isMalus', true);
                 } else {
-                    value = Math.floor(Math.random() * bonus.length)
+                    value = !gold ? Math.floor(Math.random() * bonus.length) : 0;
+
+                    // Only one gold dig per level
+                    if (value === 1) {
+                        gold = true;
+                        cell.classList.add('gold');
+                    }
+
                     object = bonus[value];
                     cell.setAttribute('isBonus', true);
                     img.classList.add('blink');
@@ -132,14 +140,22 @@ export function updateRecord() {
 export function createTimer(timerDisplay) {
     // Show timer
     timerDisplay.style.display = 'block';
-    timerDisplay.textContent = timeLeft;
+    timerDisplay.firstChild.textContent = timeLeft;
 
     // Add interval to update seconds
     countdown = setInterval(() => {
         timeLeft--;
-        timerDisplay.textContent = timeLeft;
+        timerDisplay.firstChild.textContent = timeLeft;
+
+        // Show up if the time is finishing
+        if (timeLeft < 15) {
+            timerDisplay.classList.add('blink-bg');
+        } else {
+            timerDisplay.classList.remove('blink-bg');
+        }
 
         if (timeLeft <= 0) {
+            timerDisplay.style.display = 'none';
             endGame();
         }
     }, 1000); // every 1000ms = 1 second
@@ -191,6 +207,19 @@ export function move(keyCode, row, col, farmer) {
     }
 }
 
+// Add extra time to the timer
+function addTime(time) {
+    timeLeft += time;     // add 10 extra seconds to the timer
+
+    const timeBonus = document.getElementById('time-bonus');
+    timeBonus.classList.add('blink');
+    timeBonus.textContent = '+' + time;
+    setTimeout(() => {
+        timeBonus.textContent = '';
+        timeBonus.classList.remove('blink');
+    }, 1000);
+}
+
 // Define the action
 export function action(row, col) {
     // Get the current cell info
@@ -200,8 +229,8 @@ export function action(row, col) {
     // Check if the cell contains a bonus or an object
     if (cell.hasAttribute('isBonus')) {
         if (currentValue === 0) {    // is a +10s
-            timeLeft += 10;     // add 30 extra seconds to the timer
-        } else if (currentValue === 1) {
+            addTime(10);    // add 10 extra seconds to the timer
+        } else if (currentValue === 1) {    // is a gold dig
             const gridScore = Number(document.getElementById('grid').getAttribute('points'));
             const currentScore = Number(document.getElementById('points').getAttribute('current'));
             const newPoints = Number(points.getAttribute('value')) + (gridScore - currentScore);
@@ -253,7 +282,7 @@ export function levelUp() {
         gridSize++;     // update the size  of the grid
     }
     level++;            // update the level
-    timeLeft += 30;     // add 30 extra seconds to the timer
+    addTime(30);     // add 30 extra seconds to the timer
 }
 
 // Reload the grid (used after a levelUp)

@@ -16,9 +16,10 @@ body {
     margin: 0 auto;
 }
 
-img, video, iframe {
-    max-width: 100%;
+#logo {
+    height: 200px;
     display: block;
+    margin: auto;
 }
 
 .cell img {
@@ -39,12 +40,12 @@ img, video, iframe {
     border-radius: 5px;
     border: #6dc973 1px solid;
     letter-spacing: 5px;
-    width: 40px;
+    width: fit-content;
     text-align: center;
     height: auto;
     margin: 0 auto;
     position: relative;
-    padding-left: 5px
+    padding-left: 5px;
 }
 
 #legend div span {
@@ -52,7 +53,12 @@ img, video, iframe {
     top: -20px;
 }
 
-.cell[isbonus='true'][value='1'] {
+#legend img {
+    max-width: 100%;
+    display: block;
+}
+
+.cell.gold {
     background-color: gold;
 }
 
@@ -96,6 +102,23 @@ img, video, iframe {
     }
     100% {
         visibility: visible;
+    }
+}
+
+.blink-bg {
+    animation: blinkBackground 0.7s infinite;
+}
+
+@keyframes blinkBackground {
+    0%, 100% {
+        background-color: transparent; /* or your default background */
+        color: white;
+        border-color: white;
+    }
+    50% {
+        background-color: #ff6c6c; /* or any color you want */
+        color: white;
+        border-color: white;
     }
 }
 
@@ -193,17 +216,6 @@ img, video, iframe {
     right: 0;
     border-radius: 0 10px 10px 0;
 }
-
-#dpad-center { /* Optional visual center */
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    width: 50px;
-    height: 50px;
-    background-color: rgba(80, 80, 80, 0.6);
-    /* border-radius: 50%; */ /* Make it round if desired */
-}
-
 
 /* Visual feedback on press (works for touch and mouse) */
 .dpad-button:active {

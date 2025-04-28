@@ -6,7 +6,8 @@ import {
     move,
     createTimer,
     initPoints,
-    reloadGrid
+    reloadGrid,
+    pause
 } from "./game-ingine.mjs";
 
 if ('serviceWorker' in navigator) {
@@ -28,6 +29,7 @@ const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
 const logo = document.getElementById('logo');
+const pauseButton = document.getElementById('pause-button');
 const isMobile = window.matchMedia('(max-width: 480px)').matches || window.matchMedia('(max-width: 768px)').matches;
 
 if (isMobile) {
@@ -45,10 +47,15 @@ saveButton.addEventListener('click', () => {
     /* Define the game layout */
     player.remove();
     legend.remove();
+    pauseButton.style.display = 'block';
 });
 
 restart.addEventListener('click', () => {
     location.reload();
+});
+
+pauseButton.addEventListener('click', () => {
+    pause(pauseButton);
 });
 
 // Let's go with the game

@@ -109,6 +109,17 @@ body {
     animation: blinkBackground 0.7s infinite;
 }
 
+#pause {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
+#restart, #pause-button, #player-button {
+    font-size: larger;
+    border-radius: 30%;
+}
+
 @keyframes blinkBackground {
     0%, 100% {
         background-color: transparent; /* or your default background */

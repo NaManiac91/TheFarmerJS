@@ -29,6 +29,7 @@ let gridSize = 5;
 let level = 1;
 let timeLeft = 30; // seconds
 let countdown = null;
+let isPaused = false;
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -142,21 +143,23 @@ export function createTimer(timerDisplay) {
     timerDisplay.style.display = 'block';
     timerDisplay.firstChild.textContent = timeLeft;
 
-    // Add interval to update seconds
+    // Add interval to update seconds if the game is not in paused state
     countdown = setInterval(() => {
-        timeLeft--;
-        timerDisplay.firstChild.textContent = timeLeft;
+        if (!isPaused) {
+            timeLeft--;
+            timerDisplay.firstChild.textContent = timeLeft;
 
-        // Show up if the time is finishing
-        if (timeLeft < 15) {
-            timerDisplay.classList.add('blink-bg');
-        } else {
-            timerDisplay.classList.remove('blink-bg');
-        }
+            // Show up if the time is finishing
+            if (timeLeft < 15) {
+                timerDisplay.classList.add('blink-bg');
+            } else {
+                timerDisplay.classList.remove('blink-bg');
+            }
 
-        if (timeLeft <= 0) {
-            timerDisplay.style.display = 'none';
-            endGame();
+            if (timeLeft <= 0) {
+                timerDisplay.style.display = 'none';
+                endGame();
+            }
         }
     }, 1000); // every 1000ms = 1 second
 }
@@ -290,4 +293,10 @@ export function reloadGrid() {
     points.setAttribute('current', 0);
     container.removeChild(container.firstChild);
     return initGrid();
+}
+
+// Pause game
+export function pause(button) {
+    isPaused = !isPaused;
+    button.innerText = isPaused ? '⏵' : '⏸';
 }

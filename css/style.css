@@ -1,13 +1,4 @@
-.cell {
-    height: 35px;
-    width: 35px;
-    border: 1px solid black;
-}
-
-.row {
-    display: flex;
-}
-
+/* UI */
 body {
     text-align: center;
     background-color: #fef9ee;
@@ -20,17 +11,6 @@ body {
     height: 200px;
     display: block;
     margin: auto;
-}
-
-.cell img {
-    height: inherit;
-}
-
-#container {
-    width: fit-content;;
-    height: auto;
-    margin: 0 auto;
-    position: relative;
 }
 
 #timer {
@@ -58,13 +38,6 @@ body {
     display: block;
 }
 
-.cell.gold {
-    background-color: gold;
-}
-
-.blink {
-    animation: blink-animation 1s steps(2, start) infinite;
-}
 
 #new-record {
     background-color: rgba(109, 201, 115, 0.5);
@@ -92,6 +65,56 @@ body {
     border: 1px solid;
 }
 
+#pause {
+    position: fixed;
+    top: 10px;
+    right: 40px;
+}
+
+#pause button {
+    padding-top: 2px;
+}
+
+#player-name {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#restart, #pause-button, #player-button {
+    font-size: larger;
+    border-radius: 30%;
+}
+
+/* Grid */
+.cell {
+    height: 35px;
+    width: 35px;
+    border: 1px solid black;
+}
+
+.row {
+    display: flex;
+}
+
+.cell img {
+    height: inherit;
+}
+
+#container {
+    width: fit-content;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+}
+
+.cell.gold {
+    background-color: gold;
+}
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
 /* Define the blinking keyframes */
 @keyframes blink-animation {
     0% {
@@ -109,17 +132,6 @@ body {
     animation: blinkBackground 0.7s infinite;
 }
 
-#pause {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-
-#restart, #pause-button, #player-button {
-    font-size: larger;
-    border-radius: 30%;
-}
-
 @keyframes blinkBackground {
     0%, 100% {
         background-color: transparent; /* or your default background */
@@ -133,19 +145,7 @@ body {
     }
 }
 
-/* Styles for screens 600px and wider */
-@media (min-width: 600px) {
-    body {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 360px) {
-    body {
-        font-size: smaller;
-    }
-}
-
+/* Pad buttons */
 #action-buttons {
     position: fixed;
     bottom: 70px;
@@ -168,30 +168,29 @@ body {
     -ms-user-select: none; /* IE 10+ */
 }
 
-/* Add :active pseudo-class for simple press feedback */
 #action-buttons button:active {
     background-color: rgba(200, 200, 200, 0.5);
 }
 
 #dpad-container {
-    position: fixed; /* Keep it in place */
+    position: fixed;
     bottom: 20px;
     left: 20px;
-    width: 150px; /* Adjust size as needed */
+    width: 150px;
     height: 150px;
-    z-index: 10; /* On top */
-    user-select: none; /* Prevent text selection */
+    z-index: 10;
+    user-select: none;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE */
-    transform: scale(1.2); /* Optional: Make it slightly bigger */
+    transform: scale(1.2);
     transform-origin: bottom left;
 }
 
 .dpad-button {
     position: absolute;
-    width: 50px; /* Width of each arrow button */
-    height: 50px; /* Height of each arrow button */
+    width: 50px;
+    height: 50px;
     background-color: rgba(100, 100, 100, 0.7);
     border: 1px solid #555;
     color: white;
@@ -199,11 +198,9 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    cursor: pointer; /* For desktop debugging */
     box-sizing: border-box;
 }
 
-/* Positioning the buttons */
 #dpad-up {
     top: 0;
     left: 50px;
@@ -228,7 +225,19 @@ body {
     border-radius: 0 10px 10px 0;
 }
 
-/* Visual feedback on press (works for touch and mouse) */
 .dpad-button:active {
     background-color: rgba(180, 180, 180, 0.8);
+}
+
+/* Styles for screens 600px and wider */
+@media (min-width: 600px) {
+    body {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 360px) {
+    body {
+        font-size: smaller;
+    }
 }

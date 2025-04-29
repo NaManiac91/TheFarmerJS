@@ -31,6 +31,7 @@ const restart = document.getElementById('restart');
 const logo = document.getElementById('logo');
 const pauseButton = document.getElementById('pause-button');
 const isMobile = window.matchMedia('(max-width: 480px)').matches || window.matchMedia('(max-width: 768px)').matches;
+let pauseState = false;
 
 if (isMobile) {
     logo.style.height = '120px';
@@ -55,7 +56,7 @@ restart.addEventListener('click', () => {
 });
 
 pauseButton.addEventListener('click', () => {
-    pause(pauseButton);
+    pauseState = pause(pauseButton.firstElementChild);
 });
 
 // Let's go with the game
@@ -77,8 +78,8 @@ function init() {
 
 // Init events for the game engine
     document.addEventListener('keydown', (e) => {
-        // Avoid double click
-        if (e.defaultPrevented) return;
+        // Avoid double click or disable action if the game is in pause
+        if (e.defaultPrevented || pauseState) return;
         e.preventDefault();
 
         // Get the current position

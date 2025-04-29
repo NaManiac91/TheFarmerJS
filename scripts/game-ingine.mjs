@@ -23,6 +23,7 @@ const playerName = document.getElementById('player-name');
 const container = document.getElementById('container');
 const gameOver = document.getElementById('game-over');
 const pRecord = document.getElementById('record');
+const pPause = document.getElementById('pause-text');
 
 let hoeLevel = 1;
 let gridSize = 5;
@@ -176,7 +177,7 @@ function endGame() {
 export function move(keyCode, row, col, farmer) {
     const currentPosition = document.getElementById('cell-' + row + '-' + col);
     if (currentPosition.children.length > 0) {
-        currentPosition.children[0].style.display = 'block';    // show the object "behind" the farmer
+        currentPosition.firstElementChild.style.display = 'block';    // show the object "behind" the farmer
 
         switch (keyCode) {
             case 'ArrowLeft':    // left 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'
@@ -199,13 +200,20 @@ export function move(keyCode, row, col, farmer) {
 
             // Check if is a bomb
             if (newPosition.hasAttribute('isMalus')) {
+                // Add explosion
+                const kaboom = document.createElement('img');
+                kaboom.src = 'assets/ui/explosion.svg';
+                kaboom.height = 50;
+                container.append(kaboom);
+                setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
+
                 endGame();
             }
 
-            newPosition.children[0].style.display = 'none';
+            newPosition.firstElementChild.style.display = 'none';
             newPosition.appendChild(farmer);
         } else {
-            currentPosition.children[0].style.display = 'none';
+            currentPosition.firstElementChild.style.display = 'none';
         }
     }
 }
@@ -260,7 +268,7 @@ export function action(row, col) {
     if (cell.firstChild) {
         if (currentValue < 0) {
             cell.firstChild.src = '';
-            cell.children[0].style.display = 'none';
+            cell.firstElementChild.style.display = 'none';
         } else {
             cell.firstChild.src = 'assets/ui/' + objects[currentValue];
         }
@@ -273,7 +281,7 @@ export function createFarmer() {
     farmer.id = 'farmer';
     farmer.src = 'assets/ui/farmer.svg';
     const firstCell = document.getElementById('cell-0-0');
-    firstCell.children[0].style.display = 'none';
+    firstCell.firstElementChild.style.display = 'none';
     firstCell.appendChild(farmer);
 
     return farmer;
@@ -298,5 +306,13 @@ export function reloadGrid() {
 // Pause game
 export function pause(button) {
     isPaused = !isPaused;
-    button.innerText = isPaused ? '⏵' : '⏸';
+
+    if (isPaused) {
+        button.src = 'assets/ui/play.svg';
+        pPause.style.display = 'block';
+    } else {
+        button.src = 'assets/ui/pause.svg';
+        pPause.style.display = 'none';
+    }
+    return isPaused;
 }

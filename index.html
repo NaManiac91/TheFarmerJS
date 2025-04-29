@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>The Farmer</title>
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3367D6">
     <link href="css/style.css" rel="stylesheet">
     <link rel="icon" href="assets/ui/favicon.ico">
@@ -14,7 +13,9 @@
     <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
 
     <div id="pause">
-        <button id="pause-button" style="display: none">⏸</button>
+        <button id="pause-button" style="display: none">
+            <img src="assets/ui/pause.svg" alt="legend image" width="20">
+        </button>
     </div>
 
     <!-- Player definition -->
@@ -29,6 +30,7 @@
         <span id="time-bonus"></span>
     </div>
     <p id="points"></p>
+    <p id="pause-text" style="display: none">PAUSE!!!</p>
     <div id="container"></div>
 
     <!-- End Game -->
@@ -77,3 +79,4 @@
 </body>
 </html>
 <script type="module" src="scripts/index.js"></script>
+<link rel="manifest" href="/manifest.json">

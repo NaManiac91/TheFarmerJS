@@ -31,6 +31,7 @@ const restart = document.getElementById('restart');
 const logo = document.getElementById('logo');
 const pauseButton = document.getElementById('pause-button');
 const isMobile = window.matchMedia('(max-width: 480px)').matches || window.matchMedia('(max-width: 768px)').matches;
+const isLandscape = window.matchMedia('(orientation: landscape)').matches;
 let pauseState = false;
 
 if (isMobile) {
@@ -116,7 +117,7 @@ function init() {
 
     /* Pad Logic */
     // Check if is a mobile device
-    if (isMobile) {
+    if (isMobile || isLandscape) {
         document.getElementById('pad').style.display = 'block';
         const upButton = document.getElementById('dpad-up');
         const downButton = document.getElementById('dpad-down');

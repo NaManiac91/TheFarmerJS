@@ -24,6 +24,7 @@ const container = document.getElementById('container');
 const gameOver = document.getElementById('game-over');
 const pRecord = document.getElementById('record');
 const pPause = document.getElementById('pause-text');
+const leaderboard = document.getElementById('leaderboard');
 
 let hoeLevel = 1;
 let gridSize = 5;
@@ -116,6 +117,7 @@ export function initPoints() {
     pRecord.id = 'record';
     pRecord.setAttribute('points', record.value);
     pRecord.innerText = `Best Score - ${record.name}: ${record.value}`;
+    leaderboard.style.display = 'block';
 }
 
 // Update the Record

@@ -52,17 +52,22 @@ body {
     margin-top: 20px;
 }
 
-#legend h3 {
+#legend {
     border-top: 5px ridge #6ac670;
     padding-top: 5px;
 }
 
 #legend img {
     margin-left: 25%;
+    width: 35px;
 }
 
 .with-border img {
     border: 1px solid;
+}
+
+.with-border {
+    margin-top: 5px;
 }
 
 #pause {
@@ -239,5 +244,42 @@ body {
 @media (max-width: 360px) {
     body {
         font-size: smaller;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 1024px){
+    body {
+        display: flex;
+        flex-direction: row;
+    }
+
+    header {
+        order: 1;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    main {
+        order: 2;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    footer {
+        order: 3;
+        width: 100%;
+        align-items: center;
+
+        #leaderboard {
+            margin-top: 50px;
+            margin-left: 20px;
+        }
+
+        #legend img {
+            width: 25px;
+        }
     }
 }

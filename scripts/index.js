@@ -28,15 +28,10 @@ const legend = document.getElementById('legend');
 const saveButton = document.getElementById('player-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
-const logo = document.getElementById('logo');
 const pauseButton = document.getElementById('pause-button');
-const isMobile = window.matchMedia('(max-width: 480px)').matches || window.matchMedia('(max-width: 768px)').matches;
-const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+const isMobile = window.matchMedia('(max-width: 480px)').matches
+    || window.matchMedia('(max-width: 768px)').matches || window.matchMedia('(max-width: 1024px)').matches;
 let pauseState = false;
-
-if (isMobile) {
-    logo.style.height = '120px';
-}
 
 // Add events to the button in the UI
 playerName.addEventListener('input', () => {
@@ -117,7 +112,7 @@ function init() {
 
     /* Pad Logic */
     // Check if is a mobile device
-    if (isMobile || isLandscape) {
+    if (isMobile) {
         document.getElementById('pad').style.display = 'block';
         const upButton = document.getElementById('dpad-up');
         const downButton = document.getElementById('dpad-down');

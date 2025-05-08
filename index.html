@@ -31,6 +31,7 @@
         <main>
             <p id="pause-text" style="display: none">PAUSE!!!</p>
             <div id="container"></div>
+            <div id="extralife" style="display: none"></div>
 
             <!-- End Game -->
             <div id="game-over" style="display: none">
@@ -46,21 +47,16 @@
 
             <!-- Game Legend -->
             <div id="legend">
-                <div class="with-border">
-                    <img src="assets/ui/arrow-move.svg" alt="legend image"><span> Movement</span>
-                    <img src="assets/ui/space-key.svg" alt="legend image"><span> Action</span>
-                </div>
                 <div>
-                    <img src="assets/ui/seedling.svg" alt="legend image"><span> 1</span>
-                    <img src="assets/ui/wood.svg" alt="legend image"><span> 2</span>
-                    <img src="assets/ui/rock.svg" alt="legend image"><span> 3</span>
-                </div>
-                <div>
-                    <img src="assets/ui/10-seconds.svg" alt="legend image"><span> + 10 Seconds</span>
-                    <img src="assets/ui/spade.svg" alt="legend image"><span> Win the level</span>
-                </div>
-                <div>
-                    <img src="assets/ui/bomb.svg" alt="legend image"><span> KABOOM!!</span>
+                    <img class="with-border" src="assets/ui/arrow-move.svg" alt="arrow-move"><span> Move</span>
+                    <img class="with-border" src="assets/ui/space-key.svg" alt="space-key"><span> Action</span>
+                    <img src="assets/ui/seedling.svg" alt="seedling"><span> 1</span>
+                    <img src="assets/ui/wood.svg" alt="wood"><span> 2</span>
+                    <img src="assets/ui/rock.svg" alt="rock"><span> 3</span>
+                    <img src="assets/ui/10-seconds.svg" alt="10-seconds"><span> + 10 Seconds</span>
+                    <img src="assets/ui/spade.svg" alt="spade"><span> Win the level</span>
+                    <img src="assets/ui/heart.svg" alt="heart"><span> Extra life</span>
+                    <img src="assets/ui/bomb.svg" alt="bomb"><span> KABOOM!!</span>
                 </div>
             </div>
         </footer>
@@ -87,4 +83,4 @@
         </div>
     </body>
 </html>
-<script type="module" src="scripts/index.js"></script>
+<script type="module" src="scripts/client/index.js"></script>

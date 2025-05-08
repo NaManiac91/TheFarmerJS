@@ -9,7 +9,8 @@ const objects = [
 // Bonus
 const bonus = [
     '10-seconds.svg',
-    'spade.svg'
+    'spade.svg',
+    'heart.svg'
 ];
 
 // Malus
@@ -24,6 +25,7 @@ const container = document.getElementById('container');
 const gameOver = document.getElementById('game-over');
 const pRecord = document.getElementById('record');
 const pPause = document.getElementById('pause-text');
+const pLife = document.getElementById('extralife');
 const leaderboard = document.getElementById('leaderboard');
 
 let hoeLevel = 1;
@@ -32,6 +34,7 @@ let level = 1;
 let timeLeft = 30; // seconds
 let countdown = null;
 let isPaused = false;
+let extraLife = 0;
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -64,12 +67,17 @@ export function initGrid() {
                     object = malus[0];
                     cell.setAttribute('isMalus', true);
                 } else {
-                    value = !gold ? Math.floor(Math.random() * bonus.length) : 0;
+                    // Each 2 level can be found a heart
+                    if (level % 2 === 0 && Math.random() < 0.3) {
+                        value = 2;
+                    } else {    // Otherwise gold dig or time bonus
+                        value = !gold ? Math.floor(Math.random() * (bonus.length - 1)) : 0;
 
-                    // Only one gold dig per level
-                    if (value === 1) {
-                        gold = true;
-                        cell.classList.add('gold');
+                        // Only one gold dig per level
+                        if (value === 1) {
+                            gold = true;
+                            cell.classList.add('gold');
+                        }
                     }
 
                     object = bonus[value];
@@ -79,15 +87,15 @@ export function initGrid() {
             } else {    // Otherwise a diggable object
                 value = Math.floor(Math.random() * objects.length)
                 object = objects[value];
+
+                // Update gridScore
+                points += value + hoeLevel;
             }
 
-            // Setup object img
+            // Setup object img and value
+            cell.setAttribute('value', value);
             img.src = 'assets/ui/' + object;
             cell.appendChild(img);
-
-            // Update gridScore
-            cell.setAttribute('value', value);
-            points += value + hoeLevel;
 
             // Append to the row
             row.append(cell);
@@ -202,14 +210,23 @@ export function move(keyCode, row, col, farmer) {
 
             // Check if is a bomb
             if (newPosition.hasAttribute('isMalus')) {
-                // Add explosion
-                const kaboom = document.createElement('img');
-                kaboom.src = 'assets/ui/explosion.svg';
-                kaboom.height = 50;
-                container.append(kaboom);
-                setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
+                if (extraLife > 0) {    // Update extraLife if have it
+                    extraLife--;
+                    if (extraLife > 0) {
+                        pLife.innerText = `Bonus Life: ${extraLife}`;
+                    } else {
+                        pLife.style.display = 'none';
+                    }
+                } else {    // Otherwise die
+                    // Add explosion
+                    const kaboom = document.createElement('img');
+                    kaboom.src = 'assets/ui/explosion.svg';
+                    kaboom.height = 50;
+                    container.append(kaboom);
+                    setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
 
-                endGame();
+                    endGame();
+                }
             }
 
             newPosition.firstElementChild.style.display = 'none';
@@ -251,8 +268,15 @@ export function action(row, col) {
             points.setAttribute('value', newPoints);
             points.innerText = `Points: ${newPoints}`;
             return;
+        } else if (currentValue === 2) {    // is a heart
+            extraLife++;
+            pLife.style.display = 'block';
+            pLife.innerText = `Bonus Life: ${extraLife}`;
+            pLife.classList.add('blink-bg');
+            setTimeout(() => pLife.classList.remove('blink-bg'), 2000);
         }
         cell.setAttribute('isBonus', false);
+        currentValue = -1;  // Don't add point for bonus
     }
 
     // Update the points

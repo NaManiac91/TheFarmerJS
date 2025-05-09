@@ -1,3 +1,5 @@
+import { getLeaderboard, saveRecord} from './api-client.mjs';
+
 // Global variables
 // Objects diggable
 const objects = [
@@ -35,6 +37,7 @@ let timeLeft = 30; // seconds
 let countdown = null;
 let isPaused = false;
 let extraLife = 0;
+let record;
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -109,12 +112,33 @@ export function initGrid() {
 
 // Create the Leaderboard
 export function initPoints() {
-    // Retrieve record from the localStorage
-    let record = JSON.parse(localStorage.getItem("Record"));
+    getLeaderboard().then(data => {
+        record = data;
 
-    if (!record) {
-        record = {name: playerName.value, value: 0};
-        localStorage.setItem("Record", JSON.stringify(record));
+        // Append top scores
+        const lead = document.createElement('div');
+        lead.classList.add('border-green');
+        lead.innerText = ['LEADERBOARD', ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+        leaderboard.appendChild(lead);
+        setupPlayer(data, playerName.value);
+    }, error => {
+        console.error(error); // server not found, use local storage to play offline
+        console.log('LocalStorage will be used for Record');
+        record = JSON.parse(localStorage.getItem("Record"));
+
+        if (!record) {
+            record = {};
+            record[playerName.value] = 0;
+            localStorage.setItem("Record", JSON.stringify(record));
+        }
+
+        setupPlayer(record, playerName.value);
+    });
+}
+
+function setupPlayer(record, name) {
+    if (!record[name]) {
+        record[name] = 0;
     }
 
     // Init points and record
@@ -123,20 +147,18 @@ export function initPoints() {
     points.innerText = 'Points: 0';
 
     pRecord.id = 'record';
-    pRecord.setAttribute('points', record.value);
-    pRecord.innerText = `Best Score - ${record.name}: ${record.value}`;
+    pRecord.setAttribute('points', record[name]);
+    pRecord.innerText = `Best Score - ${name}: ${record[name]}`;
     leaderboard.style.display = 'block';
 }
 
 // Update the Record
 export function updateRecord() {
-    const record = JSON.parse(localStorage.getItem("Record"));
+    const name = playerName.value;
     const currentScore = Number(points.getAttribute('value'));
-    if (currentScore > record.value) {
-        record.value = currentScore;
-        record.name = playerName.value;
-        localStorage.setItem("Record", JSON.stringify(record));
-        pRecord.innerText = `${record.name}: ${currentScore}`;
+    if (currentScore > record[name]) {
+        record[name] = currentScore;
+        pRecord.innerText = `${name}: ${record[name]}`;
         pRecord.setAttribute('points', currentScore);
 
         // Show that a new record is in place
@@ -145,6 +167,13 @@ export function updateRecord() {
         span.classList.add('blink');
         span.innerText = 'New Record!!!';
         pRecord.after(span);
+
+        saveRecord(name, currentScore).then(
+            () => console.log('Record updated!'),
+            error => {  // Use localStorage if the servers is not found
+                console.log(error);
+                localStorage.setItem("Record", JSON.stringify(record));
+            });
     }
 }
 

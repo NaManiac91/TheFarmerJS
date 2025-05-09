@@ -1,10 +1,18 @@
 {
-  "name": "The-Farmer-JS",
+  "name": "the-farmer-js",
   "version": "1.0.0",
-  "description": "",
-  "main": "scripts/index.js",
+  "description": "The farmer is <a href=\"https://namaniac91.github.io/TheFarmerJS\">HERE</a>!",
+  "main": "scripts/client/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

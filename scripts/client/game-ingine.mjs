@@ -165,7 +165,7 @@ export function updateRecord() {
         const span = document.createElement('span');
         span.id = 'new-record';
         span.classList.add('blink');
-        span.innerText = 'New Record!!!';
+        span.innerText = 'New ' + (currentScore > record[Object.keys(record)[0]]  ? 'World' : 'Personal') + ' Record!!!';
         pRecord.after(span);
 
         saveRecord(name, currentScore).then(

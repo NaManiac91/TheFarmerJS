@@ -56,6 +56,10 @@ body {
     padding-top: 5px;
 }
 
+#leaderboard .border-green {
+    margin-top: 10px;
+}
+
 #legend img {
     margin-left: 25%;
     width: 35px;

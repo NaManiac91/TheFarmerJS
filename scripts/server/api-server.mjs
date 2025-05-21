@@ -15,7 +15,7 @@ const serviceAccount = await readFile(filePath, 'utf8');
 
 admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(serviceAccount)),
-    databaseURL: "https://thefarmer-d8d99-default-rtdb.europe-west1.firebasedatabase.app"
+    databaseURL: process.env.DB
 });
 
 // Get the leaderboard from db

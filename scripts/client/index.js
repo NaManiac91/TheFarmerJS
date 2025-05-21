@@ -5,9 +5,9 @@ import {
     levelUp,
     move,
     createTimer,
-    initPoints,
     reloadGrid,
-    pause
+    pause,
+    setupPlayer
 } from "./game-ingine.mjs";
 
 if ('serviceWorker' in navigator) {
@@ -61,7 +61,7 @@ function init() {
     const points = document.getElementById('points');
 
 // Init points and leaderboard
-    initPoints();
+    setupPlayer(playerName.value);
 
 // Init timer
     createTimer(timer);
@@ -108,7 +108,6 @@ function init() {
             }
         }
     });
-
 
     /* Pad Logic */
     // Check if is a mobile device

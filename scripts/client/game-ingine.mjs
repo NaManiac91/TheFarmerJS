@@ -1,4 +1,4 @@
-import { getLeaderboard, saveRecord} from './api-client.mjs';
+import {getLeaderboard, getPlayerScore, saveRecord} from './api-client.mjs';
 
 // Global variables
 // Objects diggable
@@ -37,7 +37,7 @@ let timeLeft = 30; // seconds
 let countdown = null;
 let isPaused = false;
 let extraLife = 0;
-let record;
+let record = {};
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -110,17 +110,11 @@ export function initGrid() {
     return points;
 }
 
-// Create the Leaderboard
-export function initPoints() {
+// Get the Leaderboard from db or localStorage
+export function showLeaderboard() {
     getLeaderboard().then(data => {
-        record = data;
-
-        // Append top scores
-        const lead = document.createElement('div');
-        lead.classList.add('border-green');
-        lead.innerText = ['LEADERBOARD', ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
-        leaderboard.appendChild(lead);
-        setupPlayer(data, playerName.value);
+        record = data;  // Get leaderboard from db
+        createLeaderboard();
     }, error => {
         console.error(error); // server not found, use local storage to play offline
         console.log('LocalStorage will be used for Record');
@@ -132,23 +126,47 @@ export function initPoints() {
             localStorage.setItem("Record", JSON.stringify(record));
         }
 
-        setupPlayer(record, playerName.value);
+        createLeaderboard();
     });
 }
 
-function setupPlayer(record, name) {
-    if (!record[name]) {
-        record[name] = 0;
-    }
+// Create the leaderboard view
+function createLeaderboard() {
+    // Append top scores
+    const lead = document.createElement('div');
+    lead.classList.add('border-green');
+    lead.innerText = ['LEADERBOARD', ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+    leaderboard.appendChild(lead);
+    leaderboard.display = 'block';
+}
 
-    // Init points and record
-    points.setAttribute('value', 0);
-    points.setAttribute('current', 0);
-    points.innerText = 'Points: 0';
+// Get best score of player
+export function setupPlayer(nickname) {
+    getPlayerScore(nickname).then(score => {
+        record[nickname] = !score ? 0 : score;
 
-    pRecord.id = 'record';
-    pRecord.setAttribute('points', record[name]);
-    pRecord.innerText = `Best Score - ${name}: ${record[name]}`;
+        // Init points and record
+        points.setAttribute('value', 0);
+        points.setAttribute('current', 0);
+        points.innerText = 'Points: 0';
+
+        pRecord.id = 'record';
+        pRecord.setAttribute('points', record[nickname]);
+        pRecord.innerText = `Best Score - ${nickname}: ${record[nickname]}`;
+    }, error => {
+        console.error(error); // server not found, use local storage to play offline
+        console.log('LocalStorage will be used for Record');
+        record = JSON.parse(localStorage.getItem("Record"));
+
+        if (!record) {
+            record = {};
+            record[nickname] = 0;
+            localStorage.setItem("Record", JSON.stringify(record));
+        }
+    });
+
+
+
     leaderboard.style.display = 'block';
 }
 
@@ -210,6 +228,7 @@ function endGame() {
     updateRecord();     // Update record if needed
     document.getElementById('grid').remove();
     gameOver.style.display = 'block';
+    showLeaderboard();
 }
 
 // Define the movement

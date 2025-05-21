@@ -1,37 +1,56 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import admin from 'firebase-admin';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5002;
 const app = express();
 app.use(cors()); // Allow requests from your frontend origin
 app.use(express.json()); // Parse JSON request bodies
 
+// Initialize Firebase
+const filePath = path.join(process.cwd(), 'serviceAccountKey.json');
+const serviceAccount = await readFile(filePath, 'utf8');
 
-// Get the leaderboard from file
-async function getLeaderboard() {
-    const filePath = path.join(process.cwd(), 'leaderboard.json');
-    const fileContent = await readFile(filePath, 'utf8');
-    return JSON.parse(fileContent);
+admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(serviceAccount)),
+    databaseURL: "https://thefarmer-d8d99-default-rtdb.europe-west1.firebasedatabase.app"
+});
+
+// Get the leaderboard from db
+async function getLeaderboard(nickname) {
+    const db = admin.database();
+    const ref = db.ref('players' + (nickname ? '/' + nickname : ''));
+    return await ref.once('value');
 }
 
-// Write the file leaderboard
-async function saveLeaderboard(leaderboard) {
-    const filePath = path.join('', 'leaderboard.json');
-    return await writeFile(filePath, leaderboard, 'utf8');
+// Insert or update player score
+async function upsertPlayer(playerName, score) {
+    const db = admin.database();
+    const playersRef = db.ref('players');
+
+    try {
+        await playersRef.update({
+            [playerName]: score
+        });
+        console.log(`Player: ${playerName} set to ${score}`);
+    } catch (error) {
+        console.error('Error updating player:', error);
+    }
 }
 
 // GET Api to get leaderboard
 app.get('/api/leaderboard', async (req, res) =>  {
     try {
+        console.log('Loading leaderboard...');
         const leaderboardData = await getLeaderboard();
 
-        if (leaderboardData) {
+        if (leaderboardData.exists()) {
             console.log('Leaderboard fetched successfully');
 
             // Sort by score (descending)
-            const sortedEntries = Object.entries(leaderboardData)
+            const sortedEntries = Object.entries(leaderboardData.val())
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);      // Only top 10
 
@@ -53,12 +72,12 @@ app.get('/api/leaderboard', async (req, res) =>  {
 app.get('/api/leaderboard/:nickname', async (req, res) =>  {
     const { nickname } = req.params;
     try {
-        const jsonData = await getLeaderboard();
+        console.log('Loading player score...');
+        const playerData = await getLeaderboard(nickname);
 
-        if (jsonData && jsonData[nickname]) {
-            console.log(nickname + ' Data read successfully:', jsonData[nickname]);
-
-            res.json(jsonData[nickname]);
+        if (playerData.exists()) {
+            console.log(`Player: ${nickname} - ${playerData.val()}`);
+            return res.json(playerData.val());
         } else {
             res.status(404).json({ message: 'Player not found' });
         }
@@ -76,13 +95,7 @@ app.post('/api/leaderboard/updateRecord', async (req, res) => {
     }
 
     try {
-        const jsonData = await getLeaderboard();
-
-        if (jsonData) {
-            jsonData[nickname] = points;
-        }
-
-        await saveLeaderboard(JSON.stringify(jsonData));
+        await upsertPlayer(nickname, points);
 
         console.log('Record Updated successfully!');
         res.status(200).json('Record Updated successfully!');

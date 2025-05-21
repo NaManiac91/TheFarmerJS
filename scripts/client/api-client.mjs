@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000'; // Your Node.js server address
+const API_BASE_URL = 'http://localhost:5002'; // Your Node.js server address
 
 export async function getLeaderboard() {
     const response = await fetch(API_BASE_URL + `/api/leaderboard`);
@@ -9,6 +9,18 @@ export async function getLeaderboard() {
         return playerData;
     } else if (response.status === 404) {
         console.error('Leaderboard not found');
+    }
+}
+
+export async function getPlayerScore(nickname) {
+    const response = await fetch(API_BASE_URL + `/api/leaderboard/${nickname}`);
+
+    if (response.ok) {
+        const playerData = await response.json();
+        console.log(`Player: ${nickname} - ${playerData}`);
+        return playerData;
+    } else if (response.status === 404) {
+        console.error('Player not found');
     }
 }
 

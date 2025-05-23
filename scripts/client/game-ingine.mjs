@@ -38,6 +38,7 @@ let countdown = null;
 let isPaused = false;
 let extraLife = 0;
 let record = {};
+let ratio = 0.5
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -64,14 +65,18 @@ export function initGrid() {
             let object = null;
 
             if (Math.random() < 0.05) {
-                // Choose from a bonus and malus 50%
-                if (Math.random() < 0.5) {
+                // Choose from a bonus and malus
+                if (level % 5 === 0) {  // Grow  up the ratio of malus each 5 level
+                    ratio += 0.1;
+                }
+
+                if (Math.random() < ratio) {
                     value = -1;
                     object = malus[0];
                     cell.setAttribute('isMalus', true);
                 } else {
-                    // Each 2 level can be found a heart
-                    if (level % 2 === 0 && Math.random() < 0.3) {
+                    // Each 3 level can be found a heart
+                    if (level % 3 === 0 && Math.random() < 0.3) {
                         value = 2;
                     } else {    // Otherwise gold dig or time bonus
                         value = !gold ? Math.floor(Math.random() * (bonus.length - 1)) : 0;

@@ -117,6 +117,8 @@ export function initGrid() {
 
 // Get the Leaderboard from db or localStorage
 export function showLeaderboard() {
+    document.getElementById('grid').remove();
+    gameOver.style.display = 'block';
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         createLeaderboard();
@@ -176,7 +178,7 @@ export function setupPlayer(nickname) {
 }
 
 // Update the Record
-export function updateRecord() {
+export async function updateRecord() {
     const name = playerName.value;
     const currentScore = Number(points.getAttribute('value'));
     if (currentScore > record[name]) {
@@ -191,12 +193,7 @@ export function updateRecord() {
         span.innerText = 'New ' + (currentScore > record[Object.keys(record)[0]]  ? 'World' : 'Personal') + ' Record!!!';
         pRecord.after(span);
 
-        saveRecord(name, currentScore).then(
-            () => console.log('Record updated!'),
-            error => {  // Use localStorage if the servers is not found
-                console.log(error);
-                localStorage.setItem("Record", JSON.stringify(record));
-            });
+        return await saveRecord(name, currentScore)
     }
 }
 
@@ -230,10 +227,15 @@ export function createTimer(timerDisplay) {
 // Cleanup the game
 function endGame() {
     clearInterval(countdown);
-    updateRecord();     // Update record if needed
-    document.getElementById('grid').remove();
-    gameOver.style.display = 'block';
-    showLeaderboard();
+
+    // Update record if needed
+    updateRecord().then(
+        () => showLeaderboard(),
+        error => {  // Use localStorage if the servers is not found
+            console.log(error);
+            localStorage.setItem("Record", JSON.stringify(record));
+            showLeaderboard();
+        });
 }
 
 // Define the movement

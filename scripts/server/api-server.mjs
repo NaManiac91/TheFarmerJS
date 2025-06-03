@@ -62,7 +62,7 @@ app.post('/api/leaderboard/updateRecord', async (req, res) => {
         console.log('Record Updated successfully!');
         res.status(200).json('Record Updated successfully!');
     } catch (error) {
-        console.error('Error creating player:', error.message);
+        console.error('Error updating player score:', error.message);
         res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
 });

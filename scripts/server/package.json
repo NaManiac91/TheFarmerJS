@@ -7,6 +7,9 @@
   },
   "type": "module",
   "scripts": {
+    "build": "esbuild api-server.mjs --bundle --platform=node --format=esm --packages=external --outfile=dist/server.mjs --minify --external:node:*",
+    "start": "node dist/server.mjs",
+    "dev": "node api-server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,10 +17,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "firebase-admin": "^13.4.0",
-    "firebase-functions": "^6.3.2",
     "mongodb": "^6.16.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5"
   }
 }

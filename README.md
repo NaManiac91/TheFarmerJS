@@ -1,4 +1,4 @@
-🌾 Welcome to The Farmer! 🌾
+🌾 Welcome to The Farmer! 🌾<br>
 An easy game to relax. Move, dig, enjoy :D 
 Step into the boots of a clever farmer navigating through ever-growing fields. In this addictive puzzle adventure, each level expands the grid, challenging your strategy and quick thinking. Your mission? Collect all the items to advance — but beware! Not everything on the field is helpful...
 

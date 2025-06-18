@@ -7,7 +7,8 @@ import {
     createTimer,
     reloadGrid,
     pause,
-    setupPlayer
+    setupPlayer,
+    generateRandomPlayerName
 } from "./game-ingine.mjs";
 
 if ('serviceWorker' in navigator) {
@@ -23,28 +24,49 @@ if ('serviceWorker' in navigator) {
 }
 
 // Init core items
+const header = document.getElementById('header');
+const footer = document.getElementById('footer');
 const player = document.getElementById('player');
 const legend = document.getElementById('legend');
-const saveButton = document.getElementById('player-button');
+const startButton = document.getElementById('start-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
 const pauseButton = document.getElementById('pause-button');
+const clearButton = document.getElementById('clear-button');
 const isMobile = window.matchMedia('(max-width: 480px)').matches
     || window.matchMedia('(max-width: 768px)').matches || window.matchMedia('(max-width: 1024px)').matches;
 let pauseState = false;
 
+const nickname = sessionStorage.getItem('playerName');
+playerName.value = nickname ? nickname : generateRandomPlayerName();
+startButton.disabled = false
+
 // Add events to the button in the UI
 playerName.addEventListener('input', () => {
-    saveButton.disabled = !playerName.value;
+    startButton.disabled = !playerName.value;
+
+    if (!nickname || playerName.value !== nickname) {
+        sessionStorage.setItem('playerName', playerName.value);
+    }
 });
 
-saveButton.addEventListener('click', () => {
+startButton.addEventListener('click', () => {
     init();
 
     /* Define the game layout */
     player.remove();
     legend.remove();
+    clearButton.remove();
+    header.width = 'none';
+    footer.width = '100%';
     pauseButton.style.display = 'block';
+});
+
+clearButton.addEventListener('click', () => {
+    playerName.value = '';
+    playerName.disabled = false;
+    focus();
+    startButton.disabled = true;
 });
 
 restart.addEventListener('click', () => {
@@ -189,7 +211,6 @@ function init() {
         addListeners(downButton, 'ArrowDown');
         addListeners(leftButton, 'ArrowLeft');
         addListeners(rightButton, 'ArrowRight');
-
 
         // Add listener to action button
         const buttonA = document.getElementById('button-a');

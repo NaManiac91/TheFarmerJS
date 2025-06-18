@@ -11,36 +11,37 @@
     </head>
     <body>
         <!-- UI -->
-        <header>
+        <header id="header">
             <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
 
             <!-- Player definition -->
             <div id="player">
-                <input type="text" id="player-name" aria-label="player-name" placeholder="Player Name"/>
-                <button id="player-button" disabled>Save</button>
+                <input type="text" id="player-name" aria-label="player-name" placeholder="Player Name" disabled/>
+                <button id="start-button" class="btn-3d" disabled>Start</button>
             </div>
+            <button id="clear-button" class="btn-3d">Change Player</button>
 
             <div id="timer" style="display: none">
                 <span id="time"></span>
                 <span id="time-bonus"></span>
             </div>
             <p id="points"></p>
+            <div id="extralife" style="display: none"></div>
         </header>
 
         <!-- Game Container -->
-        <main>
+        <main id="main">
             <p id="pause-text" style="display: none">PAUSE!!!</p>
             <div id="container"></div>
-            <div id="extralife" style="display: none"></div>
 
             <!-- End Game -->
             <div id="game-over" style="display: none">
                 <p>Game Over!!!</p>
-                <button id="restart">Restart</button>
+                <button id="restart" class="btn-3d">Restart</button>
             </div>
         </main>
 
-        <footer>
+        <footer id="footer">
             <!-- Leaderboard -->
             <div id="leaderboard" style="display: none">
                 <span id="record"></span>

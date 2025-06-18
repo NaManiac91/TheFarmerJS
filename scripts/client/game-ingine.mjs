@@ -29,6 +29,7 @@ const pRecord = document.getElementById('record');
 const pPause = document.getElementById('pause-text');
 const pLife = document.getElementById('extralife');
 const leaderboard = document.getElementById('leaderboard');
+const main = document.getElementById('main');
 
 let hoeLevel = 1;
 let gridSize = 5;
@@ -119,6 +120,7 @@ export function initGrid() {
 export function showLeaderboard() {
     document.getElementById('grid').remove();
     gameOver.style.display = 'block';
+    main.style.width = '40%';
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         createLeaderboard();
@@ -149,13 +151,13 @@ function createLeaderboard() {
 
 // Get best score of player
 export function setupPlayer(nickname) {
+    // Init points and record
+    points.setAttribute('value', 0);
+    points.setAttribute('current', 0);
+    points.innerText = 'Points: 0';
+
     getPlayerScore(nickname).then(score => {
         record[nickname] = !score ? 0 : score;
-
-        // Init points and record
-        points.setAttribute('value', 0);
-        points.setAttribute('current', 0);
-        points.innerText = 'Points: 0';
 
         pRecord.id = 'record';
         pRecord.setAttribute('points', record[nickname]);
@@ -396,4 +398,44 @@ export function pause(button) {
         pPause.style.display = 'none';
     }
     return isPaused;
+}
+
+// Generate a random player name
+export function generateRandomPlayerName() {
+    const adjectives = [
+        "Swift", "Brave", "Mighty", "Tough", "Quick", "Clever", "Fierce", "Silent", "Noble", "Lucky",
+        "Shadow", "Crimson", "Golden", "Iron", "Steel", "Whisper", "Starlight", "Thunder", "Blaze", "Frost"
+    ];
+
+    const nouns = [
+        "Warrior", "Hunter", "Knight", "Rogue", "Mage", "Archer", "Guardian", "Warden", "Paladin", "Scout",
+        "Dragon", "Wolf", "Hawk", "Lion", "Bear", "Phoenix", "Viper", "Griffin", "Tiger", "Panther"
+    ];
+
+    const suffixes = [
+        "", // No suffix
+        "XV", "XX", "III", "IV", "V", // Roman numerals
+        "99", "77", "07", "21", "88", // Numbers
+        "Plays", "Gaming", "King", "Queen", "Lord", "Master", "Hero", "Legend" // Gaming-related
+    ];
+
+    // Randomly select an adjective, noun, and suffix
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+    const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+
+    // Combine them to form the name
+    let playerName = `${randomAdjective}${randomNoun}`;
+
+    // Add suffix if one was chosen
+    if (randomSuffix) {
+        // A small chance to add a space before the suffix for readability
+        if (Math.random() < 0.3) { // 30% chance of a space
+            playerName += ` ${randomSuffix}`;
+        } else {
+            playerName += randomSuffix;
+        }
+    }
+
+    return playerName;
 }

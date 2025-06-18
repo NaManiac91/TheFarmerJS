@@ -78,16 +78,58 @@ body {
 
 #pause button {
     padding-top: 2px;
+    border-radius: 30%;
 }
 
 #player-name {
     border: 2px solid black;
     border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #555;
+    cursor: default;
 }
 
-#restart, #pause-button, #player-button {
-    font-size: larger;
-    border-radius: 30%;
+#player-name:disabled {
+    background: #f8f9fa;
+}
+
+#restart, #pause-button, #start-button, #clear-button {
+    font-size: initial;
+}
+
+#player-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-3d {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: #fff3f3;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 0 #2e7d32, 0 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+    padding: 10px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-3d:disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    box-shadow: 0 3px 0 #ced4da, 0 4px 8px rgba(0,0,0,0.1);
+    top: 0;
+    opacity: 1;
+}
+
+#clear-button {
+    margin-top: 10px;
 }
 
 /* Grid */
@@ -246,7 +288,7 @@ body {
 /* Styles for screens 600px and wider */
 @media (min-width: 600px) {
     body {
-        padding: 20px;
+        padding: 10px;
     }
 }
 
@@ -266,6 +308,7 @@ body {
         order: 1;
         flex-direction: column;
         align-items: center;
+        width: 50%;
     }
 
     main {
@@ -279,16 +322,20 @@ body {
 
     footer {
         order: 3;
-        width: 100%;
+        width: 50%;
         align-items: center;
 
         #leaderboard {
             margin-top: 50px;
-            margin-left: 20px;
         }
 
         #legend img {
             width: 25px;
         }
+    }
+
+    #button-a {
+        width: 120px!important;
+        height: 120px!important;
     }
 }

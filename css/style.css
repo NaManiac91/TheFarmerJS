@@ -130,6 +130,7 @@ body {
 
 #clear-button {
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* Grid */
@@ -298,7 +299,13 @@ body {
     }
 }
 
-@media (orientation: landscape) and (max-width: 1024px){
+@media (orientation: portrait) {
+    main {
+        margin-top: 10px;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 1024px) {
     body {
         display: flex;
         flex-direction: row;

@@ -120,7 +120,7 @@ export function initGrid() {
 export function showLeaderboard() {
     document.getElementById('grid').remove();
     gameOver.style.display = 'block';
-    main.style.width = '40%';
+    main.style.width = window.matchMedia("(orientation: portrait)").matches ? '100%' : '40%';
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         createLeaderboard();

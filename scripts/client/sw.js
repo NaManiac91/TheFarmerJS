@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-farmer-app-cache-v1';
+const CACHE_NAME = 'the-farmer-app-cache-v2';
 
 const urlsToCache = [
     '/',

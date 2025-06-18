@@ -29,7 +29,6 @@ const pRecord = document.getElementById('record');
 const pPause = document.getElementById('pause-text');
 const pLife = document.getElementById('extralife');
 const leaderboard = document.getElementById('leaderboard');
-const main = document.getElementById('main');
 
 let hoeLevel = 1;
 let gridSize = 5;
@@ -120,7 +119,6 @@ export function initGrid() {
 export function showLeaderboard() {
     document.getElementById('grid').remove();
     gameOver.style.display = 'block';
-    main.style.width = window.matchMedia("(orientation: portrait)").matches ? '100%' : '40%';
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         createLeaderboard();

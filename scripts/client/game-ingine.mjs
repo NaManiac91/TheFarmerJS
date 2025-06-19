@@ -40,6 +40,12 @@ let extraLife = 0;
 let record = {};
 let ratio = 0.5
 
+// Init Sounds
+const actionSound = new Audio('/assets/audio/pong.wav');
+const bonusSound = new Audio('/assets/audio/bonus.wav');
+const bombSound = new Audio('/assets/audio/bomb.wav');
+const malusSound = new Audio('/assets/audio/malus.wav');
+
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
     const grid = document.createElement('div');
@@ -266,6 +272,8 @@ export function move(keyCode, row, col, farmer) {
             // Check if is a bomb
             if (newPosition.hasAttribute('isMalus')) {
                 if (extraLife > 0) {    // Update extraLife if have it
+                    playSound(malusSound);  // play malus sound
+
                     extraLife--;
                     if (extraLife > 0) {
                         pLife.innerText = `Bonus Life: ${extraLife}`;
@@ -273,6 +281,8 @@ export function move(keyCode, row, col, farmer) {
                         pLife.style.display = 'none';
                     }
                 } else {    // Otherwise die
+                    playSound(bombSound);  // play bomb sound
+
                     // Add explosion
                     const kaboom = document.createElement('img');
                     kaboom.src = 'assets/ui/explosion.svg';
@@ -307,12 +317,16 @@ function addTime(time) {
 
 // Define the action
 export function action(row, col) {
+    playSound(actionSound); // play action sound
+
     // Get the current cell info
     const cell = document.getElementById('cell-' + row + '-' + col);
     let currentValue = Number(cell.getAttribute('value'));
 
     // Check if the cell contains a bonus or an object
     if (cell.hasAttribute('isBonus')) {
+        playSound(bonusSound); // play bonus sound
+
         if (currentValue === 0) {    // is a +10s
             addTime(10);    // add 10 extra seconds to the timer
         } else if (currentValue === 1) {    // is a gold dig
@@ -436,4 +450,17 @@ export function generateRandomPlayerName() {
     }
 
     return playerName;
+}
+
+function playSound(sound) {
+    sound.currentTime = 0; // Reset to start
+    sound.play()
+        .then(() => {
+            // Playback started successfully
+            console.debug('Sound played successfully');
+        })
+        .catch((error) => {
+            // Playback failed
+            console.log('Failed to play sound:', error);
+        });
 }

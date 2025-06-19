@@ -7,6 +7,7 @@ const urlsToCache = [
     '/scripts/index.js',
     '/assets/images',
     '/assets/ui',
+    '/assets/audio'
 ];
 
 self.addEventListener('install', event => {

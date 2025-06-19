@@ -41,10 +41,10 @@ let record = {};
 let ratio = 0.5
 
 // Init Sounds
-const actionSound = new Audio('/assets/audio/pong.wav');
-const bonusSound = new Audio('/assets/audio/bonus.wav');
-const bombSound = new Audio('/assets/audio/bomb.wav');
-const malusSound = new Audio('/assets/audio/malus.wav');
+const actionSound = new Audio('assets/audio/pong.wav');
+const bonusSound = new Audio('assets/audio/bonus.wav');
+const bombSound = new Audio('assets/audio/bomb.wav');
+const malusSound = new Audio('assets/audio/malus.wav');
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {

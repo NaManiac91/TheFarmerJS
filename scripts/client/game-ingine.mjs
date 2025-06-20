@@ -39,6 +39,7 @@ let isPaused = false;
 let extraLife = 0;
 let record = {};
 let ratio = 0.5
+let hasSound = localStorage.getItem('hasSound') === null ? true : localStorage.getItem('hasSound');
 
 // Init Sounds
 const actionSound = new Audio('assets/audio/pong.wav');
@@ -179,7 +180,6 @@ export function setupPlayer(nickname) {
     });
 
 
-
     leaderboard.style.display = 'block';
 }
 
@@ -196,7 +196,7 @@ export async function updateRecord() {
         const span = document.createElement('span');
         span.id = 'new-record';
         span.classList.add('blink');
-        span.innerText = 'New ' + (currentScore > record[Object.keys(record)[0]]  ? 'World' : 'Personal') + ' Record!!!';
+        span.innerText = 'New ' + (currentScore > record[Object.keys(record)[0]] ? 'World' : 'Personal') + ' Record!!!';
         pRecord.after(span);
 
         return await saveRecord(name, currentScore)
@@ -452,15 +452,25 @@ export function generateRandomPlayerName() {
     return playerName;
 }
 
+// Play a given sound
 function playSound(sound) {
     sound.currentTime = 0; // Reset to start
-    sound.play()
-        .then(() => {
-            // Playback started successfully
-            console.debug('Sound played successfully');
-        })
-        .catch((error) => {
-            // Playback failed
-            console.log('Failed to play sound:', error);
-        });
+    if (hasSound) {
+        sound.play()
+            .then(() => {
+                // Playback started successfully
+                console.debug('Sound played successfully');
+            })
+            .catch((error) => {
+                // Playback failed
+                console.log('Failed to play sound:', error);
+            });
+    }
+}
+
+// Pause game
+export function toggleSound(button) {
+    hasSound = !hasSound;
+    localStorage.setItem('hasSound', hasSound);
+    button.src = hasSound ? 'assets/ui/volume-up.svg' : 'assets/ui/volume-mute.svg';
 }

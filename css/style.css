@@ -70,14 +70,16 @@ body {
     border: 1px solid;
 }
 
-#pause {
+#floating {
     position: fixed;
     top: 10px;
     right: 40px;
+    display: ruby;
 }
 
-#pause button {
-    padding-top: 2px;
+#floating button {
+    width: 35px;
+    height: 30px;
     border-radius: 30%;
 }
 
@@ -94,7 +96,7 @@ body {
     background: #f8f9fa;
 }
 
-#restart, #pause-button, #start-button, #clear-button {
+#restart, #pause-button, #start-button, #clear-button, #sound-button {
     font-size: initial;
 }
 

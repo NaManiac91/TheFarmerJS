@@ -8,7 +8,8 @@ import {
     reloadGrid,
     pause,
     setupPlayer,
-    generateRandomPlayerName
+    generateRandomPlayerName,
+    toggleSound
 } from "./game-ingine.mjs";
 
 if ('serviceWorker' in navigator) {
@@ -32,21 +33,28 @@ const startButton = document.getElementById('start-button');
 const playerName = document.getElementById('player-name');
 const restart = document.getElementById('restart');
 const pauseButton = document.getElementById('pause-button');
+const soundButton = document.getElementById('sound-button');
 const clearButton = document.getElementById('clear-button');
 const isMobile = window.matchMedia('(max-width: 480px)').matches
     || window.matchMedia('(max-width: 768px)').matches || window.matchMedia('(max-width: 1024px)').matches;
 let pauseState = false;
 
-const nickname = sessionStorage.getItem('playerName');
+// Init values from localStorage
+// Player Name
+const nickname = localStorage.getItem('playerName');
 playerName.value = nickname ? nickname : generateRandomPlayerName();
-startButton.disabled = false
+startButton.disabled = false;
 
-// Add events to the button in the UI
+// HasSound
+const hasSound = JSON.parse(localStorage.getItem('hasSound'));
+soundButton.firstElementChild.src = hasSound === null || hasSound === true ? 'assets/ui/volume-up.svg' : 'assets/ui/volume-mute.svg';
+
+// Add events to the buttons in the UI
 playerName.addEventListener('input', () => {
     startButton.disabled = !playerName.value;
 
     if (!nickname || playerName.value !== nickname) {
-        sessionStorage.setItem('playerName', playerName.value);
+        localStorage.setItem('playerName', playerName.value);
     }
 });
 
@@ -75,6 +83,10 @@ restart.addEventListener('click', () => {
 
 pauseButton.addEventListener('click', () => {
     pauseState = pause(pauseButton.firstElementChild);
+});
+
+soundButton.addEventListener('click', () => {
+    toggleSound(soundButton.firstElementChild);
 });
 
 // Let's go with the game

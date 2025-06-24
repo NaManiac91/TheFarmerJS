@@ -29,6 +29,8 @@ const pRecord = document.getElementById('record');
 const pPause = document.getElementById('pause-text');
 const pLife = document.getElementById('extralife');
 const leaderboard = document.getElementById('leaderboard');
+const pauseButton = document.getElementById('pause-button');
+const shareButton = document.getElementById('share-button');
 
 let hoeLevel = 1;
 let gridSize = 5;
@@ -124,8 +126,12 @@ export function initGrid() {
 
 // Get the Leaderboard from db or localStorage
 export function showLeaderboard() {
+    // Update the UI
     document.getElementById('grid').remove();
     gameOver.style.display = 'block';
+    shareButton.style.display = 'block';
+    pauseButton.style.display = 'none';
+
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         createLeaderboard();
@@ -162,9 +168,8 @@ export function setupPlayer(nickname) {
     points.innerText = 'Points: 0';
 
     getPlayerScore(nickname).then(score => {
-        record[nickname] = !score ? 0 : score;
+        record[nickname] = !score ? 0 : score;  // update player score
 
-        pRecord.id = 'record';
         pRecord.setAttribute('points', record[nickname]);
         pRecord.innerText = `Best Score - ${nickname}: ${record[nickname]}`;
     }, error => {
@@ -172,13 +177,19 @@ export function setupPlayer(nickname) {
         console.log('LocalStorage will be used for Record');
         record = JSON.parse(localStorage.getItem("Record"));
 
+        // Init or update local storage with player data
         if (!record) {
             record = {};
+        }
+
+        if (!record[nickname]) {
             record[nickname] = 0;
             localStorage.setItem("Record", JSON.stringify(record));
         }
-    });
 
+        pRecord.setAttribute('points', record[nickname]);
+        pRecord.innerText = `Best Score - ${nickname}: ${record[nickname]}`;
+    });
 
     leaderboard.style.display = 'block';
 }
@@ -431,7 +442,7 @@ export function generateRandomPlayerName() {
         "Plays", "Gaming", "King", "Queen", "Lord", "Master", "Hero", "Legend" // Gaming-related
     ];
 
-    // Randomly select an adjective, noun, and suffix
+    // Randomly select an adjective, noun and suffix
     const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
     const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];

@@ -1,12 +1,12 @@
 {
   "name": "TheFarmer",
-  "short_name": "The Farmer JS",
+  "short_name": "TheFarmer",
   "description": "An easy game to relax. Move, dig, enjoy :D",
   "start_url": "./",
   "scope": ".",
   "display": "standalone",
   "background_color": "#fef9ee",
-  "theme_color": "#3367D6",
+  "theme_color": "#6ac670",
   "icons": [
     {
       "src": "assets/images/icons/icon-48x48.png",

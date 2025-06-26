@@ -167,7 +167,7 @@ function init() {
 
     // Function to update state and potentially trigger game actions
     function updateDirectionState(direction, isPressed) {
-        if (dpadState[direction] !== isPressed) { // Only update if state changed
+        if (!pauseState && dpadState[direction] !== isPressed) { // Only update if state changed
             dpadState[direction] = isPressed;
 
             // Move engine
@@ -233,13 +233,14 @@ function init() {
     const buttonA = document.getElementById('button-a');
     buttonA.addEventListener('touchstart', (e) => {
         e.preventDefault();
+        if (!pauseState) {
+            const coordinates = farmer.parentElement.id.split('-');
+            let row = Number(coordinates[1]);
+            let col = Number(coordinates[2]);
+            farmer.src = 'assets/ui/farmer2.svg';
 
-        const coordinates = farmer.parentElement.id.split('-');
-        let row = Number(coordinates[1]);
-        let col = Number(coordinates[2]);
-        farmer.src = 'assets/ui/farmer2.svg';
-
-        action(row, col);
+            action(row, col);
+        }
     });
 
     buttonA.addEventListener('touchend', (e) => {

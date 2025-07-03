@@ -12,6 +12,7 @@ import {
     toggleSound
 } from "./game-ingine.mjs";
 
+// Init service worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('scripts/client/sw.js')
@@ -39,7 +40,7 @@ const clearButton = document.getElementById('clear-button');
 const shareButton = document.getElementById('share-button');
 let pauseState = false;
 
-// Init values from localStorage
+/* Init values from localStorage */
 // Player Name
 const nickname = localStorage.getItem('playerName');
 playerName.value = nickname ? nickname : generateRandomPlayerName();
@@ -49,7 +50,7 @@ startButton.disabled = false;
 const hasSound = JSON.parse(localStorage.getItem('hasSound'));
 soundButton.firstElementChild.src = hasSound === null || hasSound === true ? 'assets/ui/volume-up.svg' : 'assets/ui/volume-mute.svg';
 
-// Add events to the buttons in the UI
+/* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {
     startButton.disabled = !playerName.value;
 
@@ -92,11 +93,14 @@ soundButton.addEventListener('click', () => {
 shareButton.addEventListener('click', () => {
     // Copy the record in the clipboard
     navigator.clipboard.writeText([pRecord.innerText, 'Download The Farmer -> https://play.google.com/store/apps/details?id=org.namaniac91.twa'].join('\n'))
-        .then(() => console.log('Copied to clipboard'))
+        .then(() => {
+            window.alert('Record copied, share it with your friends!!!');
+            console.log('Copied to clipboard')
+        })
         .catch((error) => console.log('Copied to clipboard failed: ', error));
 });
 
-// Let's go with the game
+/* Let's go with the game */
 function init() {
     const timer = document.getElementById('timer');
     const points = document.getElementById('points');
@@ -113,7 +117,7 @@ function init() {
 // Init farmer position
     let farmer = createFarmer();
 
-// Init events for the game engine
+/* Init events for the game engine */
     document.addEventListener('keydown', (e) => {
         // Avoid double click or disable action if the game is in pause
         if (e.defaultPrevented || pauseState) return;

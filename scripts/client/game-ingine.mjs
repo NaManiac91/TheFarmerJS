@@ -33,7 +33,7 @@ const pauseButton = document.getElementById('pause-button');
 const shareButton = document.getElementById('share-button');
 
 let hoeLevel = 1;
-let gridSize = 5;
+let gridSize = 4;
 let level = 1;
 let timeLeft = 30; // seconds
 let countdown = null;
@@ -160,13 +160,14 @@ function createLeaderboard() {
     leaderboard.display = 'block';
 }
 
-// Get best score of player
+// Setup player info like best score and nickname
 export function setupPlayer(nickname) {
     // Init points and record
     points.setAttribute('value', 0);
     points.setAttribute('current', 0);
     points.innerText = 'Points: 0';
 
+    // Get player score from server
     getPlayerScore(nickname).then(score => {
         record[nickname] = !score ? 0 : score;  // update player score
 
@@ -340,7 +341,7 @@ export function action(row, col) {
 
         if (currentValue === 0) {    // is a +10s
             addTime(10);    // add 10 extra seconds to the timer
-        } else if (currentValue === 1) {    // is a gold dig
+        } else if (currentValue === 1) {    // is a gold dig, take all remaining points on the grid
             const gridScore = Number(document.getElementById('grid').getAttribute('points'));
             const currentScore = Number(document.getElementById('points').getAttribute('current'));
             const newPoints = Number(points.getAttribute('value')) + (gridScore - currentScore);
@@ -355,7 +356,7 @@ export function action(row, col) {
             pLife.classList.add('blink-bg');
             setTimeout(() => pLife.classList.remove('blink-bg'), 2000);
         }
-        cell.setAttribute('isBonus', false);
+        cell.removeAttribute('isBonus');
         currentValue = -1;  // Don't add point for bonus
     }
 
@@ -381,7 +382,7 @@ export function action(row, col) {
     }
 }
 
-// Return the farmer
+// Create the farmer ui element and return it
 export function createFarmer() {
     const farmer = document.createElement('img');
     farmer.id = 'farmer';
@@ -479,7 +480,7 @@ function playSound(sound) {
     }
 }
 
-// Pause game
+// Toggle the sound (mute/unmute)
 export function toggleSound(button) {
     hasSound = !hasSound;
     localStorage.setItem('hasSound', hasSound);

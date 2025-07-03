@@ -48,6 +48,7 @@ const actionSound = new Audio('assets/audio/pong.wav');
 const bonusSound = new Audio('assets/audio/bonus.wav');
 const bombSound = new Audio('assets/audio/bomb.wav');
 const malusSound = new Audio('assets/audio/malus.wav');
+const countdownSound = new Audio('assets/audio/countdown.wav');
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -230,12 +231,15 @@ export function createTimer(timerDisplay) {
             // Show up if the time is finishing
             if (timeLeft < 15) {
                 timerDisplay.classList.add('blink-bg');
+                playSound(countdownSound)
             } else {
+                countdownSound.pause();
                 timerDisplay.classList.remove('blink-bg');
             }
 
             if (timeLeft <= 0) {
                 timerDisplay.style.display = 'none';
+                countdownSound.pause();
                 endGame();
             }
         }

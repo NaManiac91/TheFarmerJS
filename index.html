@@ -10,6 +10,19 @@
         <link rel="manifest" href="manifest.json">
     </head>
     <body>
+        <!-- Pause Overlay -->
+        <div id="pause-overlay">
+            <div id="pause-content">
+                <button id="credits-button" class="btn-3d">Credits</button>
+                <span id="credits-text" style="display: none">
+                    Sound Effect by <a href="https://mixkit.co/free-sound-effects/">Mixkit</a>
+                    Icons Designed by <a href="https://freepik.com">Freepik</a>
+                </span>
+                <button id="resume-button" class="btn-3d">Back</button>
+                <button class="btn-3d restart">Restart</button>
+            </div>
+        </div>
+
         <!-- UI -->
         <header id="header">
             <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
@@ -30,13 +43,12 @@
 
         <!-- Game Container -->
         <main id="main">
-            <p id="pause-text" style="display: none">PAUSE!!!</p>
             <div id="container"></div>
 
             <!-- End Game -->
             <div id="game-over" style="display: none">
                 <p>Game Over!!!</p>
-                <button id="restart" class="btn-3d">Restart</button>
+                <button class="btn-3d restart">Restart</button>
             </div>
         </main>
 

@@ -26,7 +26,7 @@ const playerName = document.getElementById('player-name');
 const container = document.getElementById('container');
 const gameOver = document.getElementById('game-over');
 const pRecord = document.getElementById('record');
-const pPause = document.getElementById('pause-text');
+const pauseOverlay = document.getElementById('pause-overlay');
 const pLife = document.getElementById('extralife');
 const leaderboard = document.getElementById('leaderboard');
 const pauseButton = document.getElementById('pause-button');
@@ -415,15 +415,13 @@ export function reloadGrid() {
 }
 
 // Pause game
-export function pause(button) {
+export function togglePause() {
     isPaused = !isPaused;
 
     if (isPaused) {
-        button.src = 'assets/ui/play.svg';
-        pPause.style.display = 'block';
+        pauseOverlay.classList.add('active');
     } else {
-        button.src = 'assets/ui/pause.svg';
-        pPause.style.display = 'none';
+        pauseOverlay.classList.remove('active');
     }
     return isPaused;
 }

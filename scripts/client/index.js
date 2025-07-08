@@ -6,7 +6,7 @@ import {
     move,
     createTimer,
     reloadGrid,
-    pause,
+    togglePause,
     setupPlayer,
     generateRandomPlayerName,
     toggleSound
@@ -33,11 +33,14 @@ const legend = document.getElementById('legend');
 const startButton = document.getElementById('start-button');
 const playerName = document.getElementById('player-name');
 const pRecord = document.getElementById('record');
-const restart = document.getElementById('restart');
+const restart = document.getElementsByClassName('restart');
 const pauseButton = document.getElementById('pause-button');
 const soundButton = document.getElementById('sound-button');
 const clearButton = document.getElementById('clear-button');
 const shareButton = document.getElementById('share-button');
+const resumeButton = document.getElementById('resume-button');
+const creditsButton = document.getElementById('credits-button');
+const creditsText = document.getElementById('credits-text');
 let pauseState = false;
 
 /* Init values from localStorage */
@@ -78,12 +81,22 @@ clearButton.addEventListener('click', () => {
     startButton.disabled = true;
 });
 
-restart.addEventListener('click', () => {
-    location.reload();
+for (let button of restart) {
+    button.addEventListener('click', () => {
+        location.reload();
+    });
+}
+
+creditsButton.addEventListener('click', () => {
+    creditsText.style.display = creditsText.style.display === 'none' ? 'block' : 'none';
 });
 
 pauseButton.addEventListener('click', () => {
-    pauseState = pause(pauseButton.firstElementChild);
+    pauseState = togglePause();
+});
+
+resumeButton.addEventListener('click', () => {
+    pauseState = togglePause();
 });
 
 soundButton.addEventListener('click', () => {

@@ -41,6 +41,9 @@ const shareButton = document.getElementById('share-button');
 const resumeButton = document.getElementById('resume-button');
 const creditsButton = document.getElementById('credits-button');
 const creditsText = document.getElementById('credits-text');
+const legendButton = document.getElementById('legend-button');
+const legendItems = document.getElementById('legend-items');
+const guidelines = document.getElementById('guidelines');
 let pauseState = false;
 
 /* Init values from localStorage */
@@ -50,8 +53,7 @@ playerName.value = nickname ? nickname : generateRandomPlayerName();
 startButton.disabled = false;
 
 // HasSound
-const hasSound = JSON.parse(localStorage.getItem('hasSound'));
-soundButton.firstElementChild.src = hasSound === null || hasSound === true ? 'assets/ui/volume-up.svg' : 'assets/ui/volume-mute.svg';
+toggleSound(soundButton.firstElementChild);
 
 /* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {
@@ -71,7 +73,8 @@ startButton.addEventListener('click', () => {
     clearButton.remove();
     header.width = 'none';
     footer.width = '100%';
-    pauseButton.style.display = 'block';
+    pauseButton.classList.toggle('hidden');
+    guidelines.classList.toggle('hidden');
 });
 
 clearButton.addEventListener('click', () => {
@@ -88,7 +91,7 @@ for (let button of restart) {
 }
 
 creditsButton.addEventListener('click', () => {
-    creditsText.style.display = creditsText.style.display === 'none' ? 'block' : 'none';
+    creditsText.classList.toggle('hidden');
 });
 
 pauseButton.addEventListener('click', () => {
@@ -112,6 +115,17 @@ shareButton.addEventListener('click', () => {
         })
         .catch((error) => console.log('Copied to clipboard failed: ', error));
 });
+
+legendButton.addEventListener('click', () => {
+    legendItems.classList.toggle('hidden');
+    guidelines.classList.toggle('hidden');
+});
+
+/* Setup text languages */
+const texts = navigator.language.startsWith('it') ? document.getElementsByClassName('eng') : document.getElementsByClassName('it');
+for (let text of texts) {
+    text.classList.add('hidden');
+}
 
 /* Let's go with the game */
 function init() {
@@ -168,7 +182,7 @@ function init() {
     });
 
     // Init Pad
-    document.getElementById('pad').style.display = 'block';
+    document.getElementById('pad').classList.toggle('hidden');
     const upButton = document.getElementById('dpad-up');
     const downButton = document.getElementById('dpad-down');
     const leftButton = document.getElementById('dpad-left');

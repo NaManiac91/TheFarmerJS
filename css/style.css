@@ -41,6 +41,14 @@ a {
     color: white;
 }
 
+.hidden {
+    display: none;
+}
+
+#legend-button {
+    margin-bottom: 20px;
+}
+
 #logo {
     width: 100%;
     max-width: 350px;

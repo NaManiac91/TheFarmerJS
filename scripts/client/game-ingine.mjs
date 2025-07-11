@@ -42,6 +42,16 @@ let extraLife = 0;
 let record = {};
 let ratio = 0.5
 let hasSound = localStorage.getItem('hasSound') === null ? true : localStorage.getItem('hasSound');
+let leaderboardText =  'LEADERBOARD';
+let pointsText =  'Points';
+let bestScoreText =  'Best score';
+
+// Setup language texts
+if (navigator.language.startsWith('it')) {
+    leaderboardText = 'CLASSIFICA';
+    pointsText = 'Punti';
+    bestScoreText = 'Miglior punteggio';
+}
 
 // Init Sounds
 const actionSound = new Audio('assets/audio/pong.wav');
@@ -156,7 +166,7 @@ function createLeaderboard() {
     // Append top scores
     const lead = document.createElement('div');
     lead.classList.add('border-green');
-    lead.innerText = ['LEADERBOARD', ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+    lead.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
     leaderboard.appendChild(lead);
     leaderboard.display = 'block';
 }
@@ -166,14 +176,14 @@ export function setupPlayer(nickname) {
     // Init points and record
     points.setAttribute('value', 0);
     points.setAttribute('current', 0);
-    points.innerText = 'Points: 0';
+    points.innerText = `${pointsText}: 0`;
 
     // Get player score from server
     getPlayerScore(nickname).then(score => {
         record[nickname] = !score ? 0 : score;  // update player score
 
         pRecord.setAttribute('points', record[nickname]);
-        pRecord.innerText = `Best Score - ${nickname}: ${record[nickname]}`;
+        pRecord.innerText = `${bestScoreText} - ${nickname}: ${record[nickname]}`;
     }, error => {
         console.error(error); // server not found, use local storage to play offline
         console.log('LocalStorage will be used for Record');
@@ -190,7 +200,7 @@ export function setupPlayer(nickname) {
         }
 
         pRecord.setAttribute('points', record[nickname]);
-        pRecord.innerText = `Best Score - ${nickname}: ${record[nickname]}`;
+        pRecord.innerText = `${bestScoreText} - ${nickname}: ${record[nickname]}`;
     });
 
     leaderboard.style.display = 'block';
@@ -351,7 +361,7 @@ export function action(row, col) {
             const newPoints = Number(points.getAttribute('value')) + (gridScore - currentScore);
             points.setAttribute('current', gridScore);
             points.setAttribute('value', newPoints);
-            points.innerText = `Points: ${newPoints}`;
+            points.innerText = `${pointsText}: ${newPoints}`;
             return;
         } else if (currentValue === 2) {    // is a heart
             extraLife++;
@@ -371,7 +381,7 @@ export function action(row, col) {
         const current = Number(points.getAttribute('current')) + hoeLevel;
         points.setAttribute('value', value);
         points.setAttribute('current', current);
-        points.innerText = `Points: ${value}`;
+        points.innerText = `${pointsText}: ${value}`;
     }
     cell.setAttribute('value', currentValue);
 

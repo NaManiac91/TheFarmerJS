@@ -9,7 +9,8 @@ import {
     togglePause,
     setupPlayer,
     generateRandomPlayerName,
-    toggleSound
+    toggleSound,
+    showLeaderboardOverlay
 } from "./game-ingine.mjs";
 
 // Init service worker
@@ -40,6 +41,9 @@ const clearButton = document.getElementById('clear-button');
 const shareButton = document.getElementById('share-button');
 const resumeButton = document.getElementById('resume-button');
 const creditsButton = document.getElementById('credits-button');
+const leaderboardButton = document.getElementById('leaderboard-button');
+const leaderboardResumeButton = document.getElementById('leaderboard-resume-button');
+const leaderboardOverlay = document.getElementById('leaderboard-overlay');
 const creditsText = document.getElementById('credits-text');
 const legendButton = document.getElementById('legend-button');
 const legendItems = document.getElementById('legend-items');
@@ -75,6 +79,7 @@ startButton.addEventListener('click', () => {
     footer.width = '100%';
     pauseButton.classList.toggle('hidden');
     guidelines.classList.toggle('hidden');
+    leaderboardButton.classList.toggle('hidden');
 });
 
 clearButton.addEventListener('click', () => {
@@ -94,12 +99,23 @@ creditsButton.addEventListener('click', () => {
     creditsText.classList.toggle('hidden');
 });
 
+leaderboardButton.addEventListener('click', () => {
+    leaderboardButton.classList.toggle('hidden');
+    leaderboardOverlay.classList.add('active');
+    showLeaderboardOverlay();
+});
+
 pauseButton.addEventListener('click', () => {
     pauseState = togglePause();
 });
 
 resumeButton.addEventListener('click', () => {
     pauseState = togglePause();
+});
+
+leaderboardResumeButton.addEventListener('click', () => {
+    leaderboardOverlay.classList.remove('active');
+    leaderboardButton.classList.toggle('hidden');
 });
 
 soundButton.addEventListener('click', () => {

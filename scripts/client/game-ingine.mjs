@@ -135,6 +135,18 @@ export function initGrid() {
     return points;
 }
 
+function getLeaderboardErrorHandler(error) {
+    console.error(error); // server not found, use local storage to play offline
+    console.log('LocalStorage will be used for Record');
+    record = JSON.parse(localStorage.getItem("Record"));
+
+    if (!record) {
+        record = {};
+        record[playerName.value] = 0;
+        localStorage.setItem("Record", JSON.stringify(record));
+    }
+}
+
 // Get the Leaderboard from db or localStorage
 export function showLeaderboard() {
     // Update the UI
@@ -147,16 +159,7 @@ export function showLeaderboard() {
         record = data;  // Get leaderboard from db
         createLeaderboard();
     }, error => {
-        console.error(error); // server not found, use local storage to play offline
-        console.log('LocalStorage will be used for Record');
-        record = JSON.parse(localStorage.getItem("Record"));
-
-        if (!record) {
-            record = {};
-            record[playerName.value] = 0;
-            localStorage.setItem("Record", JSON.stringify(record));
-        }
-
+        getLeaderboardErrorHandler(error);
         createLeaderboard();
     });
 }
@@ -169,6 +172,19 @@ function createLeaderboard() {
     lead.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
     leaderboard.appendChild(lead);
     leaderboard.display = 'block';
+}
+
+// Get the Leaderboard from db or localStorage and show leaderboard in overlay
+export function showLeaderboardOverlay() {
+    getLeaderboard().then(data => {
+        record = data;  // Get leaderboard from db
+        const leadText = document.getElementById('leaderboard-text');
+        leadText.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+    }, error => {
+        getLeaderboardErrorHandler(error);
+        const leadText = document.getElementById('leaderboard-text');
+        leadText.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+    });
 }
 
 // Setup player info like best score and nickname

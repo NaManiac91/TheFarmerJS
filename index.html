@@ -11,7 +11,7 @@
     </head>
     <body>
         <!-- Pause Overlay -->
-        <div id="pause-overlay">
+        <div id="pause-overlay" class="overlay">
             <div id="pause-content">
                 <button id="credits-button" class="btn-3d">Credits</button>
                 <span id="credits-text" class="hidden">
@@ -25,6 +25,19 @@
                 <button class="btn-3d restart">
                     <span class="eng">Restart</span>
                     <span class="it">Ricomincia</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Overlay -->
+        <div id="leaderboard-overlay" class="overlay">
+            <div id="leaderboard-content">
+                <div id="leaderboard-text">
+
+                </div>
+                <button id="leaderboard-resume-button" class="btn-3d">
+                    <span class="eng">Back</span>
+                    <span class="it">Indietro</span>
                 </button>
             </div>
         </div>
@@ -120,6 +133,10 @@
 
             <button id="sound-button">
                 <img src="assets/ui/volume-up.svg" alt="volume" width="20" height="20">
+            </button>
+
+            <button id="leaderboard-button">
+                <img src="assets/ui/leaderboard.png" alt="leaderboard" width="20" height="20">
             </button>
 
             <button id="share-button" class="hidden">

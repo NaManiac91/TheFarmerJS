@@ -553,6 +553,16 @@ export function toggleSound(button, init) {
     }
 }
 
+// Manage the sound in pause state
+export function toggleSoundtrack(pause) {
+    if (pause) {
+        soundtrack.pause();
+        countdownSound.pause();
+    } else {
+        playSound(soundtrack);
+    }
+}
+
 // MONSTER
 // Create the monster ui element and return it
 function createMonster() {

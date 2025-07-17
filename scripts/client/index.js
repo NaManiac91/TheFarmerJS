@@ -10,7 +10,8 @@ import {
     setupPlayer,
     generateRandomPlayerName,
     toggleSound,
-    showLeaderboardOverlay
+    showLeaderboardOverlay,
+    toggleSoundtrack
 } from "./game-ingine.mjs";
 
 // Init service worker
@@ -56,8 +57,21 @@ const nickname = localStorage.getItem('playerName');
 playerName.value = nickname ? nickname : generateRandomPlayerName();
 startButton.disabled = false;
 
-// HasSound
+/* Init the sound state */
 toggleSound(soundButton.firstElementChild, true);
+
+// App went to background - pause/stop music
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        toggleSoundtrack(true);
+
+        if (!pauseState) {
+            pauseState = togglePause();
+        }
+    } else {
+        toggleSoundtrack();
+    }
+});
 
 /* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {

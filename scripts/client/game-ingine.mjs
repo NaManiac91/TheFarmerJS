@@ -37,14 +37,16 @@ let gridSize = 4;
 let level = 1;
 let timeLeft = 30; // seconds
 let countdown = null;
+let monsterCountdown = null;
 let isPaused = false;
 let extraLife = 0;
 let record = {};
 let ratio = 0.5
-let hasSound = localStorage.getItem('hasSound') === null ? true : localStorage.getItem('hasSound');
+let hasSound = localStorage.getItem('hasSound') === null ? true : (localStorage.getItem('hasSound') === 'true');
 let leaderboardText =  'LEADERBOARD';
 let pointsText =  'Points';
 let bestScoreText =  'Best score';
+let monsterPosition = {row: 3, col: 3};
 
 // Setup language texts
 if (navigator.language.startsWith('it')) {
@@ -59,6 +61,12 @@ const bonusSound = new Audio('assets/audio/bonus.wav');
 const bombSound = new Audio('assets/audio/bomb.wav');
 const malusSound = new Audio('assets/audio/malus.wav');
 const countdownSound = new Audio('assets/audio/countdown.wav');
+const wolfSound = new Audio('assets/audio/wolf-attack.mp3');
+const soundtrack = new Audio('assets/audio/EnchantedValley.mp3');
+
+soundtrack.addEventListener('ended', () => {
+    playSound(soundtrack);
+}, false);
 
 // Create the grid in the DOM and fill the grid with random items
 export function initGrid() {
@@ -257,15 +265,18 @@ export function createTimer(timerDisplay) {
             // Show up if the time is finishing
             if (timeLeft < 15) {
                 timerDisplay.classList.add('blink-bg');
-                playSound(countdownSound)
+                playSound(countdownSound);
+                soundtrack.pause();
             } else {
                 countdownSound.pause();
+                playSound(soundtrack, true);
                 timerDisplay.classList.remove('blink-bg');
             }
 
             if (timeLeft <= 0) {
                 timerDisplay.style.display = 'none';
                 countdownSound.pause();
+                playSound(soundtrack, true);
                 endGame();
             }
         }
@@ -286,10 +297,43 @@ function endGame() {
         });
 }
 
+/* Check if the farmer is dead or if there are extralife yet
+ * the monster parameter is true if the monster reaches the farmer
+ */
+function checkIfDead(newPosition, monster) {
+    if (extraLife > 0) {    // Update extraLife if have it
+        playSound(malusSound);  // play malus sound
+
+        extraLife--;
+        if (extraLife > 0) {
+            pLife.innerText = `Bonus Life: ${extraLife}`;
+        } else {
+            pLife.style.display = 'none';
+        }
+
+        if (newPosition.classList.contains('monster')) {
+            document.getElementById('monster').remove();
+        }
+    } else {    // Otherwise die
+        const isMonster = monster ? monster : newPosition.classList.contains('monster');
+
+        playSound(isMonster ? wolfSound : bombSound);  // play bomb or wolf sound
+
+        // Add explosion
+        const kaboom = document.createElement('img');
+        kaboom.src = 'assets/ui/' + (isMonster ? 'wolf.png' : 'explosion.svg');
+        kaboom.height = 50;
+        container.append(kaboom);
+        setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
+
+        endGame();
+    }
+}
+
 // Define the movement
 export function move(keyCode, row, col, farmer) {
     const currentPosition = document.getElementById('cell-' + row + '-' + col);
-    if (currentPosition.children.length > 0) {
+    if (currentPosition && currentPosition.children.length > 0) {
         currentPosition.firstElementChild.style.display = 'block';    // show the object "behind" the farmer
 
         switch (keyCode) {
@@ -312,28 +356,8 @@ export function move(keyCode, row, col, farmer) {
             const newPosition = document.getElementById('cell-' + row + '-' + col);
 
             // Check if is a bomb
-            if (newPosition.hasAttribute('isMalus')) {
-                if (extraLife > 0) {    // Update extraLife if have it
-                    playSound(malusSound);  // play malus sound
-
-                    extraLife--;
-                    if (extraLife > 0) {
-                        pLife.innerText = `Bonus Life: ${extraLife}`;
-                    } else {
-                        pLife.style.display = 'none';
-                    }
-                } else {    // Otherwise die
-                    playSound(bombSound);  // play bomb sound
-
-                    // Add explosion
-                    const kaboom = document.createElement('img');
-                    kaboom.src = 'assets/ui/explosion.svg';
-                    kaboom.height = 50;
-                    container.append(kaboom);
-                    setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
-
-                    endGame();
-                }
+            if (newPosition.hasAttribute('isMalus') || newPosition.classList.contains('monster')) {
+                checkIfDead(newPosition);
             }
 
             newPosition.firstElementChild.style.display = 'none';
@@ -346,7 +370,7 @@ export function move(keyCode, row, col, farmer) {
 
 // Add extra time to the timer
 function addTime(time) {
-    timeLeft += time;     // add 10 extra seconds to the timer
+    timeLeft += time;     // add extra seconds to the timer
 
     const timeBonus = document.getElementById('time-bonus');
     timeBonus.classList.add('blink');
@@ -371,7 +395,7 @@ export function action(row, col) {
 
         if (currentValue === 0) {    // is a +10s
             addTime(10);    // add 10 extra seconds to the timer
-        } else if (currentValue === 1) {    // is a gold dig, take all remaining points on the grid
+        } else if (currentValue === 1) {    // is a gold dig, take all remaining points on the grid and levelup
             const gridScore = Number(document.getElementById('grid').getAttribute('points'));
             const currentScore = Number(document.getElementById('points').getAttribute('current'));
             const newPoints = Number(points.getAttribute('value')) + (gridScore - currentScore);
@@ -379,7 +403,7 @@ export function action(row, col) {
             points.setAttribute('value', newPoints);
             points.innerText = `${pointsText}: ${newPoints}`;
             return;
-        } else if (currentValue === 2) {    // is a heart
+        } else if (currentValue === 2) {    // is a heart, get an extralife and show it in a dedicated space
             extraLife++;
             pLife.style.display = 'block';
             pLife.innerText = `Bonus Life: ${extraLife}`;
@@ -428,19 +452,22 @@ export function createFarmer() {
 export function levelUp() {
     if (gridSize < 9) {
         gridSize++;     // update the size  of the grid
+    } else {
+        monsterCountdown = null;
+        showMonster();
     }
     level++;            // update the level
     addTime(30);     // add 30 extra seconds to the timer
 }
 
-// Reload the grid (used after a levelUp)
+// Reload the grid (used after a levelUp) and return it
 export function reloadGrid() {
     points.setAttribute('current', 0);
     container.removeChild(container.firstChild);
     return initGrid();
 }
 
-// Pause game
+// Pause game and return the state
 export function togglePause() {
     isPaused = !isPaused;
 
@@ -493,8 +520,11 @@ export function generateRandomPlayerName() {
 }
 
 // Play a given sound
-function playSound(sound) {
-    sound.currentTime = 0; // Reset to start
+function playSound(sound, isSoundtrack) {
+    if (!isSoundtrack) {
+        sound.currentTime = 0; // Reset to start
+    }
+
     if (hasSound) {
         sound.play()
             .then(() => {
@@ -509,8 +539,83 @@ function playSound(sound) {
 }
 
 // Toggle the sound (mute/unmute)
-export function toggleSound(button) {
-    hasSound = !hasSound;
-    localStorage.setItem('hasSound', hasSound);
+export function toggleSound(button, init) {
+    if (!init) {
+        hasSound = !hasSound;
+        localStorage.setItem('hasSound', hasSound);
+    }
     button.src = hasSound ? 'assets/ui/volume-up.svg' : 'assets/ui/volume-mute.svg';
+
+    if (hasSound) {
+        playSound(soundtrack);
+    } else {
+        soundtrack.pause();
+    }
+}
+
+// MONSTER
+// Create the monster ui element and return it
+function createMonster() {
+    const monster = document.createElement('img');
+    monster.id = 'monster';
+    monster.src = 'assets/ui/wolf.png';
+    monster.width = 25;
+    monster.height = 25;
+    monsterPosition = {row: gridSize, col: gridSize};
+    return monster;
+}
+
+// Show the monster on the grid and init is movement
+function showMonster() {
+    if (document.getElementById('monster')) {
+        document.getElementById('monster').remove();
+    }
+    const wolf = createMonster();
+    monsterCountdown = setInterval(() => {
+        let newPosition = moveMonster(monsterPosition.row, monsterPosition.col, gridSize-1);
+        let isChanged = newPosition.row !== monsterPosition.row || newPosition.col !== monsterPosition.col;
+
+        let position = document.getElementById('cell-' + monsterPosition.row + '-' +  monsterPosition.col);
+        if (position && position.children.length > 0 && isChanged) {
+            position.firstElementChild.style.display = 'block';
+            position.classList.remove('monster');
+        }
+
+        monsterPosition.row = newPosition.row;
+        monsterPosition.col = newPosition.col;
+
+        position = document.getElementById('cell-' + newPosition.row + '-' +  newPosition.col);
+        if (position && position.children.length > 0 && isChanged) {
+            if (position.children.item(1) && position.children.item(1).id === 'farmer') {
+                checkIfDead(position, true);
+            }
+
+            position.firstElementChild.style.display = 'none';
+            position.appendChild(wolf);
+            position.classList.add('monster');
+        }
+    }, 2000); // every 2000ms = 2 second
+}
+
+/* The monster's movement logic: it can go randomly in the next 1 cell in all the direction.
+ * if the new position is outside the grid, the monster will stay in the current position.
+ * return the new X,Y coordinates for the monster
+ */
+function moveMonster(x, y, gridSize) {
+    let random = Math.floor(Math.random() * 8);
+    let counter = 0;
+    for (let yo = -1; yo <= 1; yo++) {
+        for (let xo = -1; xo <= 1; xo++) {
+            if (xo === 0 && yo === 0) continue;
+            if (random !== counter) counter++;
+            else {
+                const rowoffset = x + xo;
+                const coloffset = y + yo;
+                const row = rowoffset >= gridSize || rowoffset < 0 ? x : rowoffset;
+                const col = coloffset >= gridSize || coloffset < 0 ? y : coloffset;
+                return {row, col};
+            }
+        }
+    }
+    return {x, y};
 }

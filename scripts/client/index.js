@@ -57,7 +57,7 @@ playerName.value = nickname ? nickname : generateRandomPlayerName();
 startButton.disabled = false;
 
 // HasSound
-toggleSound(soundButton.firstElementChild);
+toggleSound(soundButton.firstElementChild, true);
 
 /* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {

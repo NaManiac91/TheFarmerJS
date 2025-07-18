@@ -465,7 +465,7 @@ export function levelUp() {
     if (gridSize < 9) {
         gridSize++;     // update the size  of the grid
     } else {
-        monsterCountdown = null;
+        clearInterval(monsterCountdown);
         showMonster();
     }
     level++;            // update the level

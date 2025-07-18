@@ -20,6 +20,18 @@ const malus = [
     'bomb.svg',
 ]
 
+// Cardinals coordinates used for the monster moves
+const CARDINALS = [
+    [0, -1],    // North
+    [1, 0],     // South
+    [0, 1],     // East
+    [0, -1],    // West
+    [-1, 1],    // Northeast
+    [-1, -1],   // Northwest
+    [1, 1],     // Southeast
+    [1 , -1],   // Southwest
+]
+
 // Init core items
 const points = document.getElementById('points');
 const playerName = document.getElementById('player-name');
@@ -95,7 +107,7 @@ export function initGrid() {
             if (Math.random() < 0.05) {
                 // Choose from a bonus and malus
                 if (level % 5 === 0) {  // Grow  up the ratio of malus each 5 level
-                    ratio += 0.1;
+                    ratio += 0.01;
                 }
 
                 if (Math.random() < ratio) {
@@ -571,7 +583,7 @@ function createMonster() {
     monster.src = 'assets/ui/wolf.png';
     monster.width = 25;
     monster.height = 25;
-    monsterPosition = {row: gridSize, col: gridSize};
+    monsterPosition = {row: gridSize-1, col: gridSize-1};
     return monster;
 }
 
@@ -612,20 +624,12 @@ function showMonster() {
  * return the new X,Y coordinates for the monster
  */
 function moveMonster(x, y, gridSize) {
-    let random = Math.floor(Math.random() * 8);
-    let counter = 0;
-    for (let yo = -1; yo <= 1; yo++) {
-        for (let xo = -1; xo <= 1; xo++) {
-            if (xo === 0 && yo === 0) continue;
-            if (random !== counter) counter++;
-            else {
-                const rowoffset = x + xo;
-                const coloffset = y + yo;
-                const row = rowoffset >= gridSize || rowoffset < 0 ? x : rowoffset;
-                const col = coloffset >= gridSize || coloffset < 0 ? y : coloffset;
-                return {row, col};
-            }
-        }
-    }
-    return {x, y};
+    const random = Math.floor(Math.random() * 7);
+    const point = CARDINALS[random];
+
+    const xo = x + point[0];
+    const yo = y + point[1];
+    const row = xo >= gridSize || xo < 0 ? x : xo;
+    const col = yo >= gridSize || yo < 0 ? y : yo;
+    return {row, col};
 }

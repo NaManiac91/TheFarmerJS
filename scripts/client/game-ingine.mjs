@@ -578,20 +578,21 @@ export function toggleSoundtrack(pause) {
 // MONSTER
 // Create the monster ui element and return it
 function createMonster() {
-    const monster = document.createElement('img');
-    monster.id = 'monster';
-    monster.src = 'assets/ui/wolf.png';
-    monster.width = 25;
-    monster.height = 25;
-    monsterPosition = {row: gridSize-1, col: gridSize-1};
-    return monster;
+    if (document.getElementById('monster')) {
+        return document.getElementById('monster');
+    } else {
+        const monster = document.createElement('img');
+        monster.id = 'monster';
+        monster.src = 'assets/ui/wolf.png';
+        monster.width = 25;
+        monster.height = 25;
+        monsterPosition = {row: gridSize-1, col: gridSize-1};
+        return monster;
+    }
 }
 
 // Show the monster on the grid and init is movement
 function showMonster() {
-    if (document.getElementById('monster')) {
-        document.getElementById('monster').remove();
-    }
     const wolf = createMonster();
     monsterCountdown = setInterval(() => {
         let newPosition = moveMonster(monsterPosition.row, monsterPosition.col, gridSize-1);

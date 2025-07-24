@@ -1,8 +1,12 @@
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Connection URL - adjust for your MongoDB setup
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-const DB_NAME = 'the_farmer_leaderboard';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:00000';
+const DB_NAME = process.env.MONGODB_DB_NAME || 'leaderboard';
 
 let db;
 

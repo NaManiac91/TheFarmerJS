@@ -164,6 +164,10 @@ function getLeaderboardErrorHandler(error) {
         record = {};
         record[playerName.value] = 0;
         localStorage.setItem("Record", JSON.stringify(record));
+    } else {
+        // Sort by scores descending
+        const sortedEntries = Object.entries(record).sort((a, b) => b[1] - a[1]);
+        record = Object.fromEntries(sortedEntries);
     }
 }
 
@@ -189,9 +193,30 @@ function createLeaderboard() {
     // Append top scores
     const lead = document.createElement('div');
     lead.classList.add('border-green');
-    lead.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+    appendScores(lead);
     leaderboard.appendChild(lead);
     leaderboard.display = 'block';
+}
+
+// Define scores layout
+function appendScores(container) {
+    container.append(leaderboardText);
+
+    Object.keys(record).forEach((name, index) => {
+        let text = name + ' - ' + record[name];
+        let span = document.createElement('span');
+        let br = document.createElement('br');
+
+        if (index === 0) {
+            span.innerText = '🥇' + text;
+        } else if (index === 1) {
+            span.innerText = '🥈' + text;
+        } else if (index === 2) {
+            span.innerText = '🥉' + text;
+        }
+        container.append(br);
+        container.append(span);
+    });
 }
 
 // Get the Leaderboard from db or localStorage and show leaderboard in overlay
@@ -199,11 +224,11 @@ export function showLeaderboardOverlay() {
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
         const leadText = document.getElementById('leaderboard-text');
-        leadText.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+        appendScores(leadText);
     }, error => {
         getLeaderboardErrorHandler(error);
         const leadText = document.getElementById('leaderboard-text');
-        leadText.innerText = [leaderboardText, ...Object.keys(record).map(name => name + ' - ' + record[name])].join('\n');
+        appendScores(leadText)
     });
 }
 

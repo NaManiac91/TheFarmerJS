@@ -213,6 +213,8 @@ function appendScores(container) {
             span.innerText = '🥈' + text;
         } else if (index === 2) {
             span.innerText = '🥉' + text;
+        } else {
+            span.innerText = text;
         }
         container.append(br);
         container.append(span);

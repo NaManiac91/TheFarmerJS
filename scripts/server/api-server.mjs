@@ -4,9 +4,10 @@ import rateLimit from 'express-rate-limit';
 import {initializeDatabase, getLeaderboard, upsertPlayer} from './mongo-api.mjs';
 
 const app = express();
-const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
+app.set('trust proxy', 1);
 
-console.log('FRONTEND_ORIGIN: ' + ALLOWED_ORIGIN);
+// Allowed only my frontend origin
+const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
 
 if (!ALLOWED_ORIGIN) {
     console.error('FATAL ERROR: FRONTEND_ORIGIN environment variable is not set. CORS will not be properly configured.');
@@ -15,15 +16,14 @@ if (!ALLOWED_ORIGIN) {
 const corsOptions = {
     origin: ALLOWED_ORIGIN,
     methods: 'GET,POST', // Specify allowed HTTP methods
-    credentials: true, // Allow cookies to be sent (if you plan to use them for auth later)
+    credentials: true, // Allow cookies to be sent
     optionsSuccessStatus: 204 // For pre-flight requests from some browsers
 };
 
 app.use(cors(corsOptions)); // Apply the configured CORS middleware
 app.use(express.json()); // Parse JSON request bodies
 
-// Limits each IP address to 100 requests per 15 minutes.
-// Adjust these values based on your game's expected traffic and API usage.
+// Limits each IP address to 100 requests per 15 minutes
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // Limit each IP to 100 requests per windowMs

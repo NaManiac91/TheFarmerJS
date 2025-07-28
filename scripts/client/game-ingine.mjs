@@ -110,7 +110,9 @@ export function initGrid() {
                     ratio += 0.01;
                 }
 
-                if (Math.random() < ratio) {
+                const canBeMalus = checkAngle(i, j);    // check if there is a malus in the "problematic" cells
+
+                if (Math.random() < ratio && canBeMalus) {
                     value = -1;
                     object = malus[0];
                     cell.setAttribute('isMalus', true);
@@ -155,12 +157,37 @@ export function initGrid() {
     return points;
 }
 
+// Check if the cell contains a malus
+function isMalus(row, col) {
+    const cell = document.getElementById('cell-' + row + '-' + col);
+    return cell.classList.contains('isMalus');
+}
+
+/* Avoid blocking malus in grid's angles
+ * the "problematic" cell is one of the following [1,0 -- 1, gridSize-1 -- gridSize-1, 1 -- gridSize-1, gridSize-2]
+ * if there is a malus in the neighbours
+ */
+function checkAngle(row, col) {
+    if (row === 1 && col === 0) {
+        return !isMalus(0, 1);
+    } else if (row === 1 && col === gridSize-1) {
+        return !isMalus(0, gridSize-2);
+    } else if (row === gridSize-1 && col === 1) {
+        return !isMalus(gridSize-2, 0);
+    } else if (row === gridSize-1 && col === gridSize-2) {
+        return !isMalus(gridSize-2, gridSize-1);
+    }
+    return true;    // the cell is not "problematic"
+}
+
+// Handler to manage the leaderboard if the DB is not reachable
 function getLeaderboardErrorHandler(error) {
     console.error(error); // server not found, use local storage to play offline
     console.log('LocalStorage will be used for Record');
     record = JSON.parse(localStorage.getItem("Record"));
 
     if (!record) {
+        // Init the record structure in the storage
         record = {};
         record[playerName.value] = 0;
         localStorage.setItem("Record", JSON.stringify(record));

@@ -29,7 +29,7 @@ const CARDINALS = [
     [-1, 1],    // Northeast
     [-1, -1],   // Northwest
     [1, 1],     // Southeast
-    [1 , -1],   // Southwest
+    [1, -1],   // Southwest
 ]
 
 // Init core items
@@ -55,9 +55,9 @@ let extraLife = 0;
 let record = {};
 let ratio = 0.5
 let hasSound = localStorage.getItem('hasSound') === null ? true : (localStorage.getItem('hasSound') === 'true');
-let leaderboardText =  'LEADERBOARD';
-let pointsText =  'Points';
-let bestScoreText =  'Best score';
+let leaderboardText = 'LEADERBOARD';
+let pointsText = 'Points';
+let bestScoreText = 'Best score';
 let monsterPosition = {row: 3, col: 3};
 
 // Setup language texts
@@ -110,7 +110,7 @@ export function initGrid() {
                     ratio += 0.01;
                 }
 
-                const canBeMalus = checkAngle(i, j);    // check if there is a malus in the "problematic" cells
+                const canBeMalus = checkAngle(grid, i, j);    // check if there is a malus in the "problematic" cells
 
                 if (Math.random() < ratio && canBeMalus) {
                     value = -1;
@@ -158,8 +158,8 @@ export function initGrid() {
 }
 
 // Check if the cell contains a malus
-function isMalus(row, col) {
-    const cell = document.getElementById('cell-' + row + '-' + col);
+function isMalus(grid, row, col) {
+    const cell = grid.querySelector('#cell-' + row + '-' + col);
     return cell.classList.contains('isMalus');
 }
 
@@ -167,15 +167,15 @@ function isMalus(row, col) {
  * the "problematic" cell is one of the following [1,0 -- 1, gridSize-1 -- gridSize-1, 1 -- gridSize-1, gridSize-2]
  * if there is a malus in the neighbours
  */
-function checkAngle(row, col) {
+function checkAngle(grid, row, col) {
     if (row === 1 && col === 0) {
-        return !isMalus(0, 1);
-    } else if (row === 1 && col === gridSize-1) {
-        return !isMalus(0, gridSize-2);
-    } else if (row === gridSize-1 && col === 1) {
-        return !isMalus(gridSize-2, 0);
-    } else if (row === gridSize-1 && col === gridSize-2) {
-        return !isMalus(gridSize-2, gridSize-1);
+        return !isMalus(grid, 0, 1);
+    } else if (row === 1 && col === gridSize - 1) {
+        return !isMalus(grid, 0, gridSize - 2);
+    } else if (row === gridSize - 1 && col === 1) {
+        return !isMalus(grid, gridSize - 2, 0);
+    } else if (row === gridSize - 1 && col === gridSize - 2) {
+        return !isMalus(grid, gridSize - 2, gridSize - 1);
     }
     return true;    // the cell is not "problematic"
 }
@@ -640,7 +640,7 @@ function createMonster() {
         monster.src = 'assets/ui/wolf.png';
         monster.width = 25;
         monster.height = 25;
-        monsterPosition = {row: gridSize-1, col: gridSize-1};
+        monsterPosition = {row: gridSize - 1, col: gridSize - 1};
         return monster;
     }
 }
@@ -649,10 +649,10 @@ function createMonster() {
 function showMonster() {
     const wolf = createMonster();
     monsterCountdown = setInterval(() => {
-        let newPosition = moveMonster(monsterPosition.row, monsterPosition.col, gridSize-1);
+        let newPosition = moveMonster(monsterPosition.row, monsterPosition.col, gridSize - 1);
         let isChanged = newPosition.row !== monsterPosition.row || newPosition.col !== monsterPosition.col;
 
-        let position = document.getElementById('cell-' + monsterPosition.row + '-' +  monsterPosition.col);
+        let position = document.getElementById('cell-' + monsterPosition.row + '-' + monsterPosition.col);
         if (position && position.children.length > 0 && isChanged) {
             position.firstElementChild.style.display = 'block';
             position.classList.remove('monster');
@@ -661,7 +661,7 @@ function showMonster() {
         monsterPosition.row = newPosition.row;
         monsterPosition.col = newPosition.col;
 
-        position = document.getElementById('cell-' + newPosition.row + '-' +  newPosition.col);
+        position = document.getElementById('cell-' + newPosition.row + '-' + newPosition.col);
         if (position && position.children.length > 0 && isChanged) {
             if (position.children.item(1) && position.children.item(1).id === 'farmer') {
                 checkIfDead(position, true);

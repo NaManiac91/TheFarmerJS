@@ -116,6 +116,7 @@ creditsButton.addEventListener('click', () => {
 leaderboardButton.addEventListener('click', () => {
     leaderboardButton.classList.toggle('hidden');
     leaderboardOverlay.classList.add('active');
+    document.getElementById('leaderboard-text').innerText = '';
     showLeaderboardOverlay();
 });
 

@@ -10,7 +10,7 @@ app.set('trust proxy', 1);
 const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
 
 if (!ALLOWED_ORIGIN) {
-    console.error('FATAL ERROR: FRONTEND_ORIGIN environment variable is not set. CORS will not be properly configured.');
+    console.error(`[${new Date().toISOString()}] [ERROR] FRONTEND_ORIGIN environment variable is not set. CORS will not be properly configured.`);
 }
 
 const corsOptions = {
@@ -35,14 +35,28 @@ const apiLimiter = rateLimit({
 // Apply the rate limiting to all API requests
 app.use(apiLimiter);
 
+// A simple middleware to log requests
+app.use((req, res, next) => {
+    const now = new Date();
+    const timestamp = now.toISOString();
+    const logLevel = 'INFO';
+    const clientIp = req.ip;
+    const method = req.method;
+    const url = req.originalUrl;
+
+    const logMessage = `[${timestamp}] [${logLevel}] [${clientIp}] ${method} ${url}`;
+    console.log(logMessage);
+    next(); // Pass control to the next middleware or route handler
+});
+
 // GET Api to get top 10 leaderboard
 app.get('/api/leaderboard', async (req, res) => {
     try {
-        console.log('Loading leaderboard...');
+        console.log(`[${new Date().toISOString()}] [INFO] Loading leaderboard...`);
         const leaderboardData = await getLeaderboard();
 
         if (leaderboardData && Object.keys(leaderboardData).length > 0) {
-            console.log('Leaderboard fetched successfully');
+            console.log(`[${new Date().toISOString()}] [INFO] Leaderboard fetched successfully`);
 
             // Sort by score (descending)
             const sortedEntries = Object.entries(leaderboardData)
@@ -54,7 +68,7 @@ app.get('/api/leaderboard', async (req, res) => {
             res.status(404).json({error: 'Leaderboard not found'});
         }
     } catch (error) {
-        console.error('Error fetching leaderboard:', error.message);
+        console.error(`[${new Date().toISOString()}] [ERROR] Error fetching leaderboard:`, error.message);
         res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
 });
@@ -72,17 +86,17 @@ app.get('/api/leaderboard/:nickname', async (req, res) => {
     }
 
     try {
-        console.log('Loading player score...');
+        console.log(`[${new Date().toISOString()}] [INFO] Loading player score...`);
         const playerData = await getLeaderboard(nickname);
 
         if (playerData) {
-            console.log(`Player: ${nickname} - ${playerData[nickname]}`);
+            console.log(`[${new Date().toISOString()}] [INFO] Player: ${nickname} - ${playerData[nickname]}`);
             return res.json(playerData[nickname]);
         } else {
             res.status(404).json({message: 'Player not found'});
         }
     } catch (error) {
-        console.error('Error fetching player:', error.message);
+        console.error(`[${new Date().toISOString()}] [ERROR] Error fetching player:`, error.message);
         res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
 });
@@ -109,10 +123,10 @@ app.post('/api/leaderboard/updateRecord', async (req, res) => {
     try {
         await upsertPlayer(nickname, points);
 
-        console.log('Record Updated successfully!');
+        console.log(`[${new Date().toISOString()}] [INFO] Record Updated successfully!`);
         res.status(200).json('Record Updated successfully!');
     } catch (error) {
-        console.error('Error updating player score:', error.message);
+        console.error(`[${new Date().toISOString()}] [ERROR] Error updating player score:`, error.message);
         res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
 });
@@ -123,7 +137,7 @@ async function startServer() {
 
     const PORT = process.env.PORT || 3333;
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`[${new Date().toISOString()}] [INFO] Server running on port ${PORT}`);
     });
 }
 

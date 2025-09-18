@@ -55,15 +55,19 @@
         <header id="header">
             <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
 
+            <button id="loginBtn" class="btn-3d">
+                <span class="eng">Login with Google</span>
+                <span class="it">Login with Google</span>
+            </button>
             <!-- Player definition -->
-            <div id="player">
+            <div id="player" class="hidden">
                 <input type="text" id="player-name" aria-label="player-name" placeholder="Player Name" disabled/>
                 <button id="start-button" class="btn-3d" disabled>
                     <span class="eng">Start</span>
                     <span class="it">Inizia</span>
                 </button>
             </div>
-            <button id="clear-button" class="btn-3d">
+            <button id="clear-button" class="btn-3d hidden">
                 <span class="eng">Change Playername</span>
                 <span class="it">Cambia Nome</span>
             </button>
@@ -76,7 +80,7 @@
         </header>
 
         <!-- Game Container -->
-        <main id="main">
+        <main id="main" class="hidden">
             <div id="container"></div>
 
             <!-- End Game -->
@@ -89,7 +93,7 @@
             </div>
         </main>
 
-        <footer id="footer">
+        <footer id="footer" class="hidden">
             <!-- Leaderboard -->
             <div id="leaderboard" class="hidden">
                 <p id="points"></p>

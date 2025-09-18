@@ -13,6 +13,7 @@ import {
     showLeaderboardOverlay,
     toggleSoundtrack
 } from "./game-ingine.mjs";
+import {getPlayerScore, auth} from "./api-client.mjs";
 
 // Init service worker
 if ('serviceWorker' in navigator) {
@@ -72,6 +73,37 @@ document.addEventListener('visibilitychange', function() {
         toggleSoundtrack();
     }
 });
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+    auth();
+});
+
+// Check if user is logged in when page loads
+async function checkAuth() {
+    try {
+        const response = await getPlayerScore(nickname);
+        if (response.ok) {
+            const data = await response.json();
+            showUserInfo(data);
+        } else {
+            showLoginButton();
+        }
+    } catch (error) {
+        showLoginButton();
+    }
+}
+
+function showUserInfo(user) {
+    document.getElementById('loginBtn').style.display = 'none';
+    console.log(user);
+}
+
+function showLoginButton() {
+    document.getElementById('loginBtn').style.display = 'block';
+}
+
+// Check authentication status on page load
+checkAuth();
 
 /* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {

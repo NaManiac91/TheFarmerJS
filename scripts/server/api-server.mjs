@@ -2,17 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import {initializeDatabase, getLeaderboard, upsertPlayer} from './mongo-api.mjs';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import session from 'express-session';
 
 const app = express();
 app.set('trust proxy', 1);
 
 // Allowed only my frontend origin
 const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
+const FRONTEND_GAME = process.env.FRONTEND_ORIGIN;
 
 if (!ALLOWED_ORIGIN) {
     console.error(`[${new Date().toISOString()}] [ERROR] FRONTEND_ORIGIN environment variable is not set. CORS will not be properly configured.`);
 }
 
+// Setup cors options
 const corsOptions = {
     origin: ALLOWED_ORIGIN,
     methods: 'GET,POST', // Specify allowed HTTP methods
@@ -49,8 +54,56 @@ app.use((req, res, next) => {
     next(); // Pass control to the next middleware or route handler
 });
 
+// Setup OAuth with Google
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true } // Set to true in production with HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport configuration
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+    // Here you'd typically save user to database
+    console.log(`[${new Date().toISOString()}] [INFO] Profile...`, profile);
+    return done(null, profile);
+}));
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// Routes
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        res.redirect(`${FRONTEND_GAME}?auth=success`);
+    }
+);
+
+app.get('/logout', (req, res) => {
+    req.logout(() => res.redirect(`${FRONTEND_GAME}?auth=logout`))
+});
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) return next();
+    res.status(401).json({ error: 'Not authenticated' });
+};
+
 // GET Api to get top 10 leaderboard
-app.get('/api/leaderboard', async (req, res) => {
+app.get('/api/leaderboard', isAuthenticated, async (req, res) => {
     try {
         console.log(`[${new Date().toISOString()}] [INFO] Loading leaderboard...`);
         const leaderboardData = await getLeaderboard();

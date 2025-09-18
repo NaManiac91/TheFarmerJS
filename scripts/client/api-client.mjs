@@ -44,3 +44,8 @@ export async function saveRecord(nickname, points) {
         console.error('Something go wrong with the update');
     }
 }
+
+// Auth with Google
+export function auth(nickname) {
+    window.location.href = API_BASE_URL + '/auth/google';
+}

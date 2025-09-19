@@ -11,7 +11,7 @@ app.set('trust proxy', 1);
 
 // Allowed only my frontend origin
 const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
-const FRONTEND_GAME = process.env.FRONTEND_ORIGIN;
+const FRONTEND_GAME = process.env.FRONTEND_GAME;
 
 if (!ALLOWED_ORIGIN) {
     console.error(`[${new Date().toISOString()}] [ERROR] FRONTEND_ORIGIN environment variable is not set. CORS will not be properly configured.`);
@@ -70,7 +70,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL: "https://namaniac91.org/auth/google/callback"
 }, (accessToken, refreshToken, profile, done) => {
     // Here you'd typically save user to database
     console.log(`[${new Date().toISOString()}] [INFO] Profile...`, profile);
@@ -80,7 +80,7 @@ passport.use(new GoogleStrategy({
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-// Routes
+// Routes OAuth
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
@@ -88,6 +88,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
+        console.log(`[${new Date().toISOString()}] [INFO] OAuth callback successful`);
         res.redirect(`${FRONTEND_GAME}?auth=success`);
     }
 );

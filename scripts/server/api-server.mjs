@@ -70,7 +70,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://namaniac91.org/auth/google/callback"
+    callbackURL: ALLOWED_ORIGIN + '/auth/google/callback'
 }, (accessToken, refreshToken, profile, done) => {
     // Here you'd typically save user to database
     console.log(`[${new Date().toISOString()}] [INFO] Profile...`, profile);

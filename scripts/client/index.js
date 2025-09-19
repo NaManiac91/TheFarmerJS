@@ -13,7 +13,6 @@ import {
     showLeaderboardOverlay,
     toggleSoundtrack
 } from "./game-ingine.mjs";
-import {getPlayerScore, auth} from "./api-client.mjs";
 
 // Init service worker
 if ('serviceWorker' in navigator) {
@@ -78,32 +77,31 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     auth();
 });
 
-// Check if user is logged in when page loads
-async function checkAuth() {
-    try {
-        const response = await getPlayerScore(nickname);
-        if (response.ok) {
-            const data = await response.json();
-            showUserInfo(data);
-        } else {
-            showLoginButton();
-        }
-    } catch (error) {
-        showLoginButton();
+// Check if user just completed OAuth
+function checkAuthStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authStatus = urlParams.get('auth');
+
+    if (authStatus === 'success') {
+        console.log('OAuth successful!');
+        // Handle successful authentication
+        handleAuthSuccess();
+
+        // Clean up URL (remove ?auth=success)
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 }
 
-function showUserInfo(user) {
+function handleAuthSuccess() {
     document.getElementById('loginBtn').style.display = 'none';
-    console.log(user);
-}
-
-function showLoginButton() {
-    document.getElementById('loginBtn').style.display = 'block';
+    player.classList.remove('hidden');
+    clearButton.classList.remove('hidden');
+    document.getElementById('main').classList.remove('hidden');
+    document.getElementById('footer').classList.remove('hidden');
 }
 
 // Check authentication status on page load
-checkAuth();
+checkAuthStatus();
 
 /* Add events to the buttons in the UI */
 playerName.addEventListener('input', () => {

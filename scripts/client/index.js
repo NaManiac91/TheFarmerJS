@@ -13,6 +13,7 @@ import {
     showLeaderboardOverlay,
     toggleSoundtrack
 } from "./game-ingine.mjs";
+import {auth} from "./api-client.mjs";
 
 // Init service worker
 if ('serviceWorker' in navigator) {
@@ -61,7 +62,7 @@ startButton.disabled = false;
 toggleSound(soundButton.firstElementChild, true);
 
 // App went to background - pause/stop music
-document.addEventListener('visibilitychange', function() {
+document.addEventListener('visibilitychange', function () {
     if (document.hidden) {
         toggleSoundtrack(true);
 
@@ -205,7 +206,7 @@ function init() {
 // Init farmer position
     let farmer = createFarmer();
 
-/* Init events for the game engine */
+    /* Init events for the game engine */
     document.addEventListener('keydown', (e) => {
         // Avoid double click or disable action if the game is in pause
         if (e.defaultPrevented || pauseState) return;

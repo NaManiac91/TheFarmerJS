@@ -179,6 +179,11 @@ a {
     opacity: 1;
 }
 
+#loginBtn {
+    background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%);
+    box-shadow: 0 4px 0 #FF5722, 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
 #clear-button {
     margin-top: 10px;
     margin-bottom: 10px;

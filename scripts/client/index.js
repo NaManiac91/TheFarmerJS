@@ -52,12 +52,6 @@ const legendItems = document.getElementById('legend-items');
 const guidelines = document.getElementById('guidelines');
 let pauseState = false;
 
-/* Init values from localStorage */
-// Player Name
-const nickname = localStorage.getItem('playerName');
-playerName.value = nickname ? nickname : generateRandomPlayerName();
-startButton.disabled = false;
-
 /* Init the sound state */
 toggleSound(soundButton.firstElementChild, true);
 
@@ -72,10 +66,6 @@ document.addEventListener('visibilitychange', function () {
     } else {
         toggleSoundtrack();
     }
-});
-
-document.getElementById('loginBtn').addEventListener('click', () => {
-    auth();
 });
 
 // Check if user just completed OAuth
@@ -93,18 +83,37 @@ function checkAuthStatus() {
     }
 }
 
-function handleAuthSuccess() {
+function setupStartState() {
+    /* Init values from localStorage */
+    // Player Name
+    const nickname = localStorage.getItem('playerName');
+    playerName.value = nickname ? nickname : generateRandomPlayerName();
+    startButton.disabled = false;
+
     document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('guestBtn').style.display = 'none';
     player.classList.remove('hidden');
     clearButton.classList.remove('hidden');
     document.getElementById('main').classList.remove('hidden');
     document.getElementById('footer').classList.remove('hidden');
 }
 
+function handleAuthSuccess() {
+    setupStartState();
+}
+
 // Check authentication status on page load
 checkAuthStatus();
 
 /* Add events to the buttons in the UI */
+document.getElementById('loginBtn').addEventListener('click', () => {
+    auth();
+});
+
+document.getElementById('guestBtn').addEventListener('click', () => {
+    setupStartState();
+});
+
 playerName.addEventListener('input', () => {
     startButton.disabled = !playerName.value;
 

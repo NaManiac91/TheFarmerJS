@@ -61,7 +61,9 @@ export function auth() {
 
 // Check is the user is already authenticated and return the player name if it is
 export async function checkAuth() {
-    const response = await fetch(API_BASE_URL + '/auth/check');
+    const response = await fetch(API_BASE_URL + '/auth/check', {
+        credentials: 'include'
+    });
 
     if (response.ok) {
         const playerData = await response.json();

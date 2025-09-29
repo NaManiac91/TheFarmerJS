@@ -117,7 +117,7 @@ app.get('/auth/google/callback',
 app.get('/auth/check', isAuthenticated, (req, res) => {
     res.json({
         authenticated: true,
-        playerName: req.playerName
+        playerName: req.user.playerName
     });
 });
 

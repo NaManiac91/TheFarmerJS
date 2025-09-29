@@ -2,7 +2,7 @@ const API_BASE_URL = 'http://localhost:5002'; // Your Node.js server address
 
 // Get leaderboard
 export async function getLeaderboard() {
-    const response = await fetch(API_BASE_URL + `/farmer/api/leaderboard`);
+    const response = await fetch(API_BASE_URL + `/api/leaderboard`);
 
     if (response.ok) {
         const playerData = await response.json();
@@ -18,7 +18,7 @@ export async function getLeaderboard() {
 
 // Get the @nickname score
 export async function getPlayerScore(nickname) {
-    const response = await fetch(API_BASE_URL + `/farmer/api/leaderboard/${nickname}`);
+    const response = await fetch(API_BASE_URL + `/api/leaderboard/${nickname}`);
 
     if (response.ok) {
         const playerData = await response.json();
@@ -35,7 +35,7 @@ export async function getPlayerScore(nickname) {
 // Save the new @points for the @nickname
 export async function saveRecord(nickname, points) {
     // Try to get the leaderboard via the backend API
-    const response = await fetch(API_BASE_URL + `/farmer/api/leaderboard/updateRecord`, {
+    const response = await fetch(API_BASE_URL + `/api/updateRecord`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', // Or the appropriate content type for your API

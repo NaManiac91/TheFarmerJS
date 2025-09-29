@@ -119,7 +119,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // GET Api to get top 10 leaderboard
-app.get('/farmer/api/leaderboard', async (req, res) => {
+app.get('/api/leaderboard', async (req, res) => {
     try {
         console.log(`[${new Date().toISOString()}] [INFO] Loading leaderboard...`);
         const leaderboardData = await getLeaderboard();
@@ -143,7 +143,7 @@ app.get('/farmer/api/leaderboard', async (req, res) => {
 });
 
 // GET Api to get the best score for a given @nickname
-app.get('/farmer/api/leaderboard/:nickname', isAuthenticated, async (req, res) => {
+app.get('/api/leaderboard/:nickname', isAuthenticated, async (req, res) => {
     const {nickname} = req.params;
 
     if (typeof nickname !== 'string' || nickname.length === 0) {
@@ -171,7 +171,7 @@ app.get('/farmer/api/leaderboard/:nickname', isAuthenticated, async (req, res) =
 });
 
 // POST Api to update the score @nickname with new @points
-app.post('/farmer/api/leaderboard/updateRecord', isAuthenticated, async (req, res) => {
+app.post('/api/updateRecord', isAuthenticated, async (req, res) => {
     const {nickname, points} = req.body;
     if (!nickname) {
         return res.status(400).json({message: 'Player name is required'});

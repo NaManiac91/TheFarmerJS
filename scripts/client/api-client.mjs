@@ -58,3 +58,22 @@ export async function saveRecord(nickname, points) {
 export function auth() {
     window.location.href = API_BASE_URL + '/auth/google';
 }
+
+// Check is the user is already authenticated and return the player name if it is
+export async function checkAuth() {
+    const response = await fetch(API_BASE_URL + '/auth/check');
+
+    if (response.ok) {
+        const playerData = await response.json();
+        if (playerData.authenticated) {
+            console.log(`Player: ${playerData.playerName} - Authenticated`);
+            return playerData.playerName;
+        } else {
+            console.log('Unauthorized - redirecting to login');
+            throw new Error(`HTTP error! status 401: ${response.status}`);
+        }
+    } else if (response.status === 401) {
+        console.log('Unauthorized - redirecting to login');
+        throw new Error(`HTTP error! status 401: ${response.status}`);
+    }
+}

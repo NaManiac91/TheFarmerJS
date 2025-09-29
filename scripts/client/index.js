@@ -13,7 +13,7 @@ import {
     showLeaderboardOverlay,
     toggleSoundtrack
 } from "./game-ingine.mjs";
-import {auth} from "./api-client.mjs";
+import {auth, checkAuth} from "./api-client.mjs";
 
 // Init service worker
 if ('serviceWorker' in navigator) {
@@ -74,19 +74,27 @@ function checkAuthStatus() {
     const authStatus = urlParams.get('auth');
 
     if (authStatus === 'success') {
-        console.log('OAuth successful!');
         // Handle successful authentication
         handleAuthSuccess();
 
         // Clean up URL (remove ?auth=success)
         window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+        // Check if the user is already authenticated
+        checkAuth().then(authName => {
+            setupStartState(authName);
+        }, () => {
+            window.alert('Session expired a new authentication is required');
+            console.log('Session expired')
+        });
     }
 }
 
-function setupStartState() {
+function setupStartState(authName) {
+    console.log('OAuth successful!');
     /* Init values from localStorage */
     // Player Name
-    const nickname = localStorage.getItem('playerName');
+    const nickname = authName ? authName : localStorage.getItem('playerName');
     playerName.value = nickname ? nickname : generateRandomPlayerName();
     startButton.disabled = false;
 
@@ -182,7 +190,7 @@ shareButton.addEventListener('click', () => {
     navigator.clipboard.writeText([pRecord.innerText, 'Download The Farmer -> https://play.google.com/store/apps/details?id=org.namaniac91.twa'].join('\n'))
         .then(() => {
             window.alert('Record copied, share it with your friends!!!');
-            console.log('Copied to clipboard')
+            console.log('Copied to clipboard');
         })
         .catch((error) => console.log('Copied to clipboard failed: ', error));
 });

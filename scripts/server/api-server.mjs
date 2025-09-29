@@ -95,6 +95,12 @@ passport.use(new GoogleStrategy({
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) return next();
+    res.status(401).json({ error: 'Not authenticated' });
+};
+
 // Routes OAuth
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
@@ -108,15 +114,16 @@ app.get('/auth/google/callback',
     }
 );
 
+app.get('/api/auth/check', isAuthenticated, (req, res) => {
+    res.json({
+        authenticated: true,
+        playerName: req.playerName
+    });
+});
+
 app.get('/logout', (req, res) => {
     req.logout(() => res.redirect(`${FRONTEND_GAME}?auth=logout`))
 });
-
-// Middleware to check if user is authenticated
-const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) return next();
-    res.status(401).json({ error: 'Not authenticated' });
-};
 
 // GET Api to get top 10 leaderboard
 app.get('/api/leaderboard', async (req, res) => {

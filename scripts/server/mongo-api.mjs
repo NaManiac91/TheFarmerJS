@@ -28,7 +28,10 @@ export async function initializeDatabase() {
         process.exit(1);
     }
 }
-// Get leaderboard data (equivalent to your getLeaderboard function)
+
+/* Get leaderboard data
+ * @nickname if is null return all the leaderboard, if not return a specific score
+ */
 export async function getLeaderboard(nickname) {
     const collection = db.collection('players');
 
@@ -37,7 +40,7 @@ export async function getLeaderboard(nickname) {
         const player = await collection.findOne({ playerName: nickname });
         return player ? { [nickname]: player.score } : null;
     } else {
-        // Get all players (equivalent to Firebase structure)
+        // Get all players
         const players = await collection.find({}).toArray();
         const playersObject = {};
         players.forEach(player => {
@@ -47,16 +50,22 @@ export async function getLeaderboard(nickname) {
     }
 }
 
-// Insert or update player score (equivalent to your upsertPlayer function)
-export async function upsertPlayer(playerName, score) {
+/* Insert or update player and update the score
+ * @googleId the uniq id used to auth with AOuth Google
+ * @playerName the name used in the game
+ * @email the mail linked to the Google account
+ * @score the score make by the player
+ */
+export async function upsertPlayer(googleId, playerName, email, score) {
     const collection = db.collection('players');
 
     try {
         await collection.updateOne(
-            { playerName },
+            { googleId },
             {
                 $set: {
                     playerName,
+                    email,
                     score,
                     updatedAt: new Date()
                 },
@@ -70,4 +79,12 @@ export async function upsertPlayer(playerName, score) {
     } catch (error) {
         console.error('Error updating player:', error);
     }
+}
+
+// Retrieve player info by @googleId if exists
+export async function getPlayerByGoogleId(googleId) {
+    const collection = db.collection('players');
+
+    const player = await collection.findOne({ googleId: googleId });
+    return player ? { [player.playerName]: player.score } : null;
 }

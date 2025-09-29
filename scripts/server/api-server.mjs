@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import {initializeDatabase, getLeaderboard, upsertPlayer} from './mongo-api.mjs';
+import {initializeDatabase, getLeaderboard, upsertPlayer, getPlayerByGoogleId} from './mongo-api.mjs';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
@@ -71,10 +71,25 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: ALLOWED_ORIGIN + '/auth/google/callback'
-}, (accessToken, refreshToken, profile, done) => {
-    // Here you'd typically save user to database
-    console.log(`[${new Date().toISOString()}] [INFO] Profile...`, profile);
-    return done(null, profile);
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        // Use the Google ID as the unique identifier
+        const googleId = profile.id;
+
+        // Check if the player already exists in your database
+        const existingPlayer = await getPlayerByGoogleId(googleId);
+
+        if (existingPlayer) {
+            return done(null, existingPlayer);
+        } else {
+            // Player does not exist, create a new record
+            const newPlayer = await upsertPlayer(googleId, profile.displayName, profile.emails[0].value, 0);
+            return done(null, newPlayer);
+        }
+    } catch (error) {
+        console.error(`[${new Date().toISOString()}] [ERROR] Passport Google Strategy error:`, error);
+        return done(error, false);
+    }
 }));
 
 passport.serializeUser((user, done) => done(null, user));
@@ -104,7 +119,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // GET Api to get top 10 leaderboard
-app.get('/api/leaderboard', isAuthenticated, async (req, res) => {
+app.get('/farmer/api/leaderboard', async (req, res) => {
     try {
         console.log(`[${new Date().toISOString()}] [INFO] Loading leaderboard...`);
         const leaderboardData = await getLeaderboard();
@@ -128,7 +143,7 @@ app.get('/api/leaderboard', isAuthenticated, async (req, res) => {
 });
 
 // GET Api to get the best score for a given @nickname
-app.get('/api/leaderboard/:nickname', async (req, res) => {
+app.get('/farmer/api/leaderboard/:nickname', isAuthenticated, async (req, res) => {
     const {nickname} = req.params;
 
     if (typeof nickname !== 'string' || nickname.length === 0) {
@@ -156,7 +171,7 @@ app.get('/api/leaderboard/:nickname', async (req, res) => {
 });
 
 // POST Api to update the score @nickname with new @points
-app.post('/api/leaderboard/updateRecord', async (req, res) => {
+app.post('/farmer/api/leaderboard/updateRecord', isAuthenticated, async (req, res) => {
     const {nickname, points} = req.body;
     if (!nickname) {
         return res.status(400).json({message: 'Player name is required'});
@@ -175,7 +190,8 @@ app.post('/api/leaderboard/updateRecord', async (req, res) => {
     }
 
     try {
-        await upsertPlayer(nickname, points);
+        const googleId = req.user.id;
+        await upsertPlayer(googleId, nickname, points);
 
         console.log(`[${new Date().toISOString()}] [INFO] Record Updated successfully!`);
         res.status(200).json('Record Updated successfully!');

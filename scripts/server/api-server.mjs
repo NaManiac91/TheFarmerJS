@@ -42,14 +42,18 @@ app.use(apiLimiter);
 
 // A simple middleware to log requests
 app.use((req, res, next) => {
-    const now = new Date();
-    const timestamp = now.toISOString();
+    const timestamp = new Date().toISOString();
     const logLevel = 'INFO';
     const clientIp = req.ip;
     const method = req.method;
     const url = req.originalUrl;
 
-    const logMessage = `[${timestamp}] [${logLevel}] [${clientIp}] ${method} ${url}`;
+    // Add session and auth info
+    const sessionId = req.sessionID || 'No Session';
+    const isAuth = req.isAuthenticated() ? 'YES' : 'NO';
+    const userName = req.user ? req.user.playerName : 'Anonymous';
+
+    const logMessage = `[${timestamp}] [${logLevel}] [${clientIp}] ${method} ${url} | Session: ${sessionId} | Auth: ${isAuth} | User: ${userName}`;
     console.log(logMessage);
     next(); // Pass control to the next middleware or route handler
 });
@@ -60,7 +64,13 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true } // Set to true in production with HTTPS
+    cookie: {
+        secure: true, // HTTPS is enabled
+        httpOnly: true, // Prevent JavaScript access
+        sameSite: 'lax', // Same domain, so 'lax' is perfect
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        path: '/' // Ensure cookie is available for all paths
+    }
 }));
 
 app.use(passport.initialize());
@@ -107,10 +117,20 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
+    passport.authenticate('google', { failureRedirect: FRONTEND_GAME }),
     (req, res) => {
         console.log(`[${new Date().toISOString()}] [INFO] OAuth callback successful`);
-        res.redirect(`${FRONTEND_GAME}?auth=success`);
+        console.log(`[${new Date().toISOString()}] [INFO] User:`, req.user);
+
+        // Save the session before redirecting
+        req.session.save((err) => {
+            if (err) {
+                console.error(`[${new Date().toISOString()}] [ERROR] Session save error:`, err);
+                return res.redirect(`${FRONTEND_GAME}?auth=failed`);
+            }
+            console.log(`[${new Date().toISOString()}] [INFO] Session saved, redirecting...`);
+            res.redirect(`${FRONTEND_GAME}?auth=success`);
+        });
     }
 );
 
@@ -126,7 +146,7 @@ app.get('/logout', (req, res) => {
 });
 
 // GET Api to get top 10 leaderboard
-app.get('/api/leaderboard', async (req, res) => {
+app.get('/api/leaderboard', isAuthenticated, async (req, res) => {
     try {
         console.log(`[${new Date().toISOString()}] [INFO] Loading leaderboard...`);
         const leaderboardData = await getLeaderboard();
@@ -198,7 +218,8 @@ app.post('/api/updateRecord', isAuthenticated, async (req, res) => {
 
     try {
         const googleId = req.user.id;
-        await upsertPlayer(googleId, nickname, points);
+        const email = req.user.email;
+        await upsertPlayer(googleId, nickname, email, points);
 
         console.log(`[${new Date().toISOString()}] [INFO] Record Updated successfully!`);
         res.status(200).json('Record Updated successfully!');

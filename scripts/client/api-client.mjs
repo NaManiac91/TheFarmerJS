@@ -2,7 +2,9 @@ const API_BASE_URL = 'http://localhost:5002'; // Your Node.js server address
 
 // Get leaderboard
 export async function getLeaderboard() {
-    const response = await fetch(API_BASE_URL + `/api/leaderboard`);
+    const response = await fetch(API_BASE_URL + `/api/leaderboard`, {
+        credentials: 'include'
+    });
 
     if (response.ok) {
         const playerData = await response.json();
@@ -18,7 +20,9 @@ export async function getLeaderboard() {
 
 // Get the @nickname score
 export async function getPlayerScore(nickname) {
-    const response = await fetch(API_BASE_URL + `/api/leaderboard/${nickname}`);
+    const response = await fetch(API_BASE_URL + `/api/leaderboard/${nickname}`, {
+        credentials: 'include'
+    });
 
     if (response.ok) {
         const playerData = await response.json();
@@ -41,6 +45,7 @@ export async function saveRecord(nickname, points) {
             'Content-Type': 'application/json', // Or the appropriate content type for your API
         },
         body: JSON.stringify({nickname: nickname, points: points}), // Convert your JavaScript object to a JSON string
+        credentials: 'include'
     });
 
     if (response.ok) {
@@ -59,7 +64,7 @@ export function auth() {
     window.location.href = API_BASE_URL + '/auth/google';
 }
 
-// Check is the user is already authenticated and return the player name if it is
+// Check is the user is already authenticated and return the player name if it is ok
 export async function checkAuth() {
     const response = await fetch(API_BASE_URL + '/auth/check', {
         credentials: 'include'

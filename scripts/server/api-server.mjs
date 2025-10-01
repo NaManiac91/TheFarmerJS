@@ -30,6 +30,27 @@ app.use(cors(corsOptions)); // Apply the configured CORS middleware
 app.use(express.json()); // Parse JSON request bodies
 app.use(cookieParser()); // Parse the cookie
 
+// Setup OAuth with Google
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    name: 'farmer.sid', // Give it a specific name
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000,
+        path: '/',
+        domain: undefined // Let it auto-detect since same domain
+    },
+    proxy: true // Important since you have trust proxy enabled
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Limits each IP address to 100 requests per 15 minutes
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -41,27 +62,6 @@ const apiLimiter = rateLimit({
 
 // Apply the rate limiting to all API requests
 app.use(apiLimiter);
-
-// Setup OAuth with Google
-// Session configuration
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    name: 'farmer.sid', // Give it a specific name
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000,
-        path: '/',
-        domain: undefined // Let it auto-detect since same domain
-    },
-    proxy: true // Important since you have trust proxy enabled
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // A simple middleware to log requests
 app.use((req, res, next) => {

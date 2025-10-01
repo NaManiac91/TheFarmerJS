@@ -46,13 +46,16 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    name: 'farmer.sid', // Give it a specific name
     cookie: {
-        secure: true, // HTTPS is enabled
-        httpOnly: true, // Prevent JavaScript access
-        sameSite: 'lax', // Same domain, so 'lax' is perfect
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        path: '/' // Ensure cookie is available for all paths
-    }
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+        path: '/',
+        domain: undefined // Let it auto-detect since same domain
+    },
+    proxy: true // Important since you have trust proxy enabled
 }));
 
 app.use(passport.initialize());

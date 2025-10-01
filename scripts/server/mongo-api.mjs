@@ -59,29 +59,38 @@ export async function getLeaderboard(nickname) {
 export async function upsertPlayer(googleId, playerName, email, score) {
     const collection = db.collection('players');
 
-    try {
-        await collection.updateOne(
-            { googleId },
-            {
-                $set: {
-                    playerName,
-                    email,
-                    score,
-                    updatedAt: new Date()
-                },
-                $setOnInsert: {
-                    createdAt: new Date()
-                }
-            },
-            { upsert: true }
-        );
-        console.log(`Player: ${playerName} set to ${score}`);
+    // Check for duplicate player name
+    const existingPlayer = await collection.findOne({
+        playerName,
+        googleId: { $ne: googleId }
+    });
 
-        // Return the player object after upsert
-        return await collection.findOne({ googleId });
-    } catch (error) {
-        console.error('Error updating player:', error);
+    if (existingPlayer) {
+        const error = new Error('Player name is already in use.');
+        error.code = 11000;
+        throw error;
     }
+
+    // Perform the upsert operation
+    await collection.updateOne(
+        { googleId },
+        {
+            $set: {
+                playerName,
+                email,
+                score,
+                updatedAt: new Date()
+            },
+            $setOnInsert: {
+                createdAt: new Date()
+            }
+        },
+        { upsert: true }
+    );
+    console.log(`Player: ${playerName} set to ${score}`);
+
+    // Return the player object after upsert
+    return await collection.findOne({ googleId });
 }
 
 // Retrieve player info by @googleId if exists

@@ -5,6 +5,7 @@ import {initializeDatabase, getLeaderboard, upsertPlayer, getPlayerByGoogleId} f
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.set('trust proxy', 1);
@@ -27,6 +28,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Apply the configured CORS middleware
 app.use(express.json()); // Parse JSON request bodies
+app.use(cookieParser()); // Parse the cookie
 
 // Limits each IP address to 100 requests per 15 minutes
 const apiLimiter = rateLimit({
@@ -105,7 +107,10 @@ passport.use(new GoogleStrategy({
     }
 }));
 
-passport.serializeUser((user, done) => done(null, user));
+passport.serializeUser((user, done) => {
+    done(null, user.googleId);
+});
+
 passport.deserializeUser(async (googleId, done) => {
     try {
         const user = await getPlayerByGoogleId(googleId);

@@ -76,6 +76,9 @@ export async function upsertPlayer(googleId, playerName, email, score) {
             { upsert: true }
         );
         console.log(`Player: ${playerName} set to ${score}`);
+
+        // Return the player object after upsert
+        return await collection.findOne({ googleId });
     } catch (error) {
         console.error('Error updating player:', error);
     }
@@ -85,6 +88,5 @@ export async function upsertPlayer(googleId, playerName, email, score) {
 export async function getPlayerByGoogleId(googleId) {
     const collection = db.collection('players');
 
-    const player = await collection.findOne({ googleId: googleId });
-    return player ? { [player.playerName]: player.score } : null;
+    return await collection.findOne({ googleId: googleId });
 }

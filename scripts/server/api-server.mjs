@@ -103,7 +103,14 @@ passport.use(new GoogleStrategy({
 }));
 
 passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.deserializeUser(async (googleId, done) => {
+    try {
+        const user = await getPlayerByGoogleId(googleId);
+        done(null, user);
+    } catch (error) {
+        done(error, null);
+    }
+});
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {

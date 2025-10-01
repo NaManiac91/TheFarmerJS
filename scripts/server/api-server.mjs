@@ -40,24 +40,6 @@ const apiLimiter = rateLimit({
 // Apply the rate limiting to all API requests
 app.use(apiLimiter);
 
-// A simple middleware to log requests
-app.use((req, res, next) => {
-    const timestamp = new Date().toISOString();
-    const logLevel = 'INFO';
-    const clientIp = req.ip;
-    const method = req.method;
-    const url = req.originalUrl;
-
-    // Add session and auth info
-    const sessionId = req.sessionID || 'No Session';
-    const isAuth = req.isAuthenticated() ? 'YES' : 'NO';
-    const userName = req.user ? req.user.playerName : 'Anonymous';
-
-    const logMessage = `[${timestamp}] [${logLevel}] [${clientIp}] ${method} ${url} | Session: ${sessionId} | Auth: ${isAuth} | User: ${userName}`;
-    console.log(logMessage);
-    next(); // Pass control to the next middleware or route handler
-});
-
 // Setup OAuth with Google
 // Session configuration
 app.use(session({
@@ -75,6 +57,24 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+// A simple middleware to log requests
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    const logLevel = 'INFO';
+    const clientIp = req.ip;
+    const method = req.method;
+    const url = req.originalUrl;
+
+    // Add session and auth info
+    const sessionId = req.sessionID || 'No Session';
+    const isAuth = req.isAuthenticated() ? 'YES' : 'NO';
+    const userName = req.user ? req.user.playerName : 'Anonymous';
+
+    const logMessage = `[${timestamp}] [${logLevel}] [${clientIp}] ${method} ${url} | Session: ${sessionId} | Auth: ${isAuth} | User: ${userName}`;
+    console.log(logMessage);
+    next(); // Pass control to the next middleware or route handler
+});
 
 // Passport configuration
 passport.use(new GoogleStrategy({

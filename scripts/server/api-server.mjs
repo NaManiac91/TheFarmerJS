@@ -232,7 +232,7 @@ app.post('/api/updateRecord', isAuthenticated, async (req, res) => {
     }
 
     try {
-        const googleId = req.user.id;
+        const googleId = req.user.googleId;
         const email = req.user.email;
         await upsertPlayer(googleId, nickname, email, points);
 

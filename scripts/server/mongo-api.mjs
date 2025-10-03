@@ -65,10 +65,9 @@ export async function upsertPlayer(googleId, playerName, email, score) {
         googleId: { $ne: googleId }
     });
 
+    // If already exist append the googleId to the playerName
     if (existingPlayer) {
-        const error = new Error('Player name is already in use.');
-        error.code = 11000;
-        throw error;
+        playerName = existingPlayer.playerName + '#' + googleId;
     }
 
     // Perform the upsert operation

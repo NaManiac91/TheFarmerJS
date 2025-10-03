@@ -31,8 +31,11 @@ if ('serviceWorker' in navigator) {
 // Init core items
 const header = document.getElementById('header');
 const footer = document.getElementById('footer');
+const main = document.getElementById('main');
 const player = document.getElementById('player');
 const legend = document.getElementById('legend');
+const loginButton = document.getElementById('login-button');
+const guestButton = document.getElementById('guest-button');
 const startButton = document.getElementById('start-button');
 const playerName = document.getElementById('player-name');
 const pRecord = document.getElementById('record');
@@ -51,6 +54,7 @@ const legendButton = document.getElementById('legend-button');
 const legendItems = document.getElementById('legend-items');
 const guidelines = document.getElementById('guidelines');
 let pauseState = false;
+let nickname = '';
 
 /* Init the sound state */
 toggleSound(soundButton.firstElementChild, true);
@@ -74,60 +78,62 @@ function checkAuthStatus() {
     const authStatus = urlParams.get('auth');
 
     if (authStatus === 'success') {
-        // Handle successful authentication
-        handleAuthSuccess();
+        console.log('OAuth successful!');
 
         // Clean up URL (remove ?auth=success)
         window.history.replaceState({}, document.title, window.location.pathname);
-    } else {
-        // Check if the user is already authenticated
-        checkAuth().then(authName => {
-            setupStartState(authName);
-        }, () => {
-            window.alert('Session expired a new authentication is required');
-            console.log('Session expired')
-        });
     }
+
+    // Check if the user is already authenticated and retrieve the player name
+    checkAuth().then(authName => {
+        setupStartState(authName);
+    }, () => {
+        window.alert('Session expired a new authentication is required');
+        console.log('Session expired')
+    });
 }
 
+/* Initialize the player name and the UI
+ * @authName is the name retrieved from the server
+ * if it is null, the game works in offline mode
+ */
 function setupStartState(authName) {
-    console.log('OAuth successful!');
     /* Init values from localStorage */
     // Player Name
-    const nickname = authName ? authName : localStorage.getItem('playerName');
+    nickname = authName ? authName : localStorage.getItem('playerName');
     playerName.value = nickname ? nickname : generateRandomPlayerName();
     startButton.disabled = false;
 
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('guestBtn').style.display = 'none';
+    /* UI ready for the start-up */
+    loginButton.style.display = 'none';
+    guestButton.style.display = 'none';
     player.classList.remove('hidden');
     clearButton.classList.remove('hidden');
-    document.getElementById('main').classList.remove('hidden');
-    document.getElementById('footer').classList.remove('hidden');
-}
-
-function handleAuthSuccess() {
-    setupStartState();
+    main.classList.remove('hidden');
+    footer.classList.remove('hidden');
 }
 
 // Check authentication status on page load
 checkAuthStatus();
 
-/* Add events to the buttons in the UI */
-document.getElementById('loginBtn').addEventListener('click', () => {
-    auth();
-});
-
-document.getElementById('guestBtn').addEventListener('click', () => {
-    setupStartState();
-});
-
+// Validation on the player name input field
 playerName.addEventListener('input', () => {
     startButton.disabled = !playerName.value;
 
     if (!nickname || playerName.value !== nickname) {
         localStorage.setItem('playerName', playerName.value);
     }
+});
+
+/* Add events to the buttons in the UI */
+// Online mode
+loginButton.addEventListener('click', () => {
+    auth();
+});
+
+// Offline mode
+guestButton.addEventListener('click', () => {
+    setupStartState();
 });
 
 startButton.addEventListener('click', () => {

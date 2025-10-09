@@ -250,13 +250,12 @@ function appendScores(container) {
 
 // Get the Leaderboard from db or localStorage and show leaderboard in overlay
 export function showLeaderboardOverlay() {
+    const leadText = document.getElementById('leaderboard-text');
     getLeaderboard().then(data => {
         record = data;  // Get leaderboard from db
-        const leadText = document.getElementById('leaderboard-text');
         appendScores(leadText);
     }, error => {
         getLeaderboardErrorHandler(error);
-        const leadText = document.getElementById('leaderboard-text');
         appendScores(leadText)
     });
 }

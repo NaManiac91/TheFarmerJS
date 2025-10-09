@@ -88,7 +88,7 @@ function checkAuthStatus() {
     checkAuth().then(authName => {
         setupStartState(authName);
     }, () => {
-        window.alert('Session expired a new authentication is required');
+        customAlert('Session expired a new authentication is required');
         console.log('Session expired')
     });
 }
@@ -111,6 +111,12 @@ function setupStartState(authName) {
     clearButton.classList.remove('hidden');
     main.classList.remove('hidden');
     footer.classList.remove('hidden');
+}
+
+// Show custom alert with a @message
+function customAlert(message) {
+    leaderboardOverlay.classList.toggle('active');
+    document.getElementById('leaderboard-text').innerText = message;
 }
 
 // Check authentication status on page load
@@ -168,9 +174,7 @@ creditsButton.addEventListener('click', () => {
 });
 
 leaderboardButton.addEventListener('click', () => {
-    leaderboardButton.classList.toggle('hidden');
-    leaderboardOverlay.classList.add('active');
-    document.getElementById('leaderboard-text').innerText = '';
+    customAlert('');
     showLeaderboardOverlay();
 });
 
@@ -183,8 +187,7 @@ resumeButton.addEventListener('click', () => {
 });
 
 leaderboardResumeButton.addEventListener('click', () => {
-    leaderboardOverlay.classList.remove('active');
-    leaderboardButton.classList.toggle('hidden');
+    leaderboardOverlay.classList.toggle('active');
 });
 
 soundButton.addEventListener('click', () => {
@@ -195,7 +198,7 @@ shareButton.addEventListener('click', () => {
     // Copy the record in the clipboard
     navigator.clipboard.writeText([pRecord.innerText, 'Download The Farmer -> https://play.google.com/store/apps/details?id=org.namaniac91.twa'].join('\n'))
         .then(() => {
-            window.alert('Record copied, share it with your friends!!!');
+            customAlert('Record copied, share it with your friends!!!');
             console.log('Copied to clipboard');
         })
         .catch((error) => console.log('Copied to clipboard failed: ', error));

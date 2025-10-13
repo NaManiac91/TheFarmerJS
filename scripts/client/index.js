@@ -88,7 +88,10 @@ function checkAuthStatus() {
     checkAuth().then(authName => {
         setupStartState(authName);
     }, () => {
-        customAlert('Session expired a new authentication is required');
+        customAlert('Welcome back to the fields!\n' +
+            'Your session has ended.\n' +
+            'Log in to continue your farming adventure online,\n' +
+            'or play as a guest to keep digging offline.');
         console.log('Session expired')
     });
 }

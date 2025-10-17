@@ -9,4 +9,4 @@ Collect all the items to complete the level
 Each level increases in size and complexity
 Encounter bonus items that help… and malus items that might surprise you!
 
-The farmer is <a href="https://namaniac91.org/TheFarmerJS/">HERE</a>!
+The farmer is <a href="https://namaniac91.org/TheFarmer/">HERE</a>!

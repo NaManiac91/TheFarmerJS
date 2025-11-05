@@ -386,7 +386,7 @@ function checkIfDead(newPosition, monster) {
 
         // Add explosion
         const kaboom = document.createElement('img');
-        kaboom.src = 'assets/ui/' + (isMonster ? 'wolf.png' : 'explosion.svg');
+        kaboom.src = 'assets/ui/' + (isMonster ? 'wolf.svg' : 'explosion.svg');
         kaboom.height = 50;
         container.append(kaboom);
         setTimeout(() => kaboom.remove(), 3000);    // Remove it after 3 secs
@@ -636,7 +636,7 @@ function createMonster() {
     } else {
         const monster = document.createElement('img');
         monster.id = 'monster';
-        monster.src = 'assets/ui/wolf.png';
+        monster.src = 'assets/ui/wolf.svg';
         monster.width = 25;
         monster.height = 25;
         monsterPosition = {row: gridSize - 1, col: gridSize - 1};

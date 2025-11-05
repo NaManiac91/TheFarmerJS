@@ -49,9 +49,11 @@ const creditsButton = document.getElementById('credits-button');
 const leaderboardButton = document.getElementById('leaderboard-button');
 const leaderboardResumeButton = document.getElementById('leaderboard-resume-button');
 const leaderboardOverlay = document.getElementById('leaderboard-overlay');
+const leadText = document.getElementById('leaderboard-text');
+const legendResumeButton = document.getElementById('legend-resume-button');
+const legendOverlay = document.getElementById('legend-overlay');
 const creditsText = document.getElementById('credits-text');
 const legendButton = document.getElementById('legend-button');
-const legendItems = document.getElementById('legend-items');
 const guidelines = document.getElementById('guidelines');
 let pauseState = false;
 let nickname = '';
@@ -119,7 +121,7 @@ function setupStartState(authName) {
 // Show custom alert with a @message
 function customAlert(message) {
     leaderboardOverlay.classList.toggle('active');
-    document.getElementById('leaderboard-text').innerText = message;
+    leadText.innerText = message;
 }
 
 // Check authentication status on page load
@@ -193,6 +195,10 @@ leaderboardResumeButton.addEventListener('click', () => {
     leaderboardOverlay.classList.toggle('active');
 });
 
+legendResumeButton.addEventListener('click', () => {
+    legendOverlay.classList.toggle('active');
+});
+
 soundButton.addEventListener('click', () => {
     toggleSound(soundButton.firstElementChild);
 });
@@ -208,8 +214,7 @@ shareButton.addEventListener('click', () => {
 });
 
 legendButton.addEventListener('click', () => {
-    legendItems.classList.toggle('hidden');
-    guidelines.classList.toggle('hidden');
+    legendOverlay.classList.toggle('active');
 });
 
 /* Setup text languages */

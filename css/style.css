@@ -28,10 +28,13 @@ body {
     visibility: visible;
 }
 
-#leaderboard-text {
+.background-round-white {
     background-color: white;
     border-radius: 5px;
     padding: 10px;
+}
+
+#leaderboard-text {
     margin-bottom: 10px;
 }
 
@@ -53,7 +56,8 @@ a {
 }
 
 #legend-button {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px
 }
 
 #logo {
@@ -78,14 +82,24 @@ a {
     padding-left: 5px;
 }
 
-#legend div span {
-    position: relative;
-    top: -25px;
+#legend-items {
+    width: 140px;
+    display: list-item;;
 }
 
-#legend img {
+#legend-items div span {
+    position: relative;
+    top: -12px;
+}
+
+#legend-items div {
+    display: ruby-text;
+}
+
+#legend-items img {
     max-width: 100%;
     display: block;
+    width: 35px;
 }
 
 #new-record {
@@ -108,11 +122,6 @@ a {
 
 #leaderboard .border-green {
     margin-top: 10px;
-}
-
-#legend img {
-    margin-left: 25%;
-    width: 35px;
 }
 
 .with-border {
@@ -154,6 +163,11 @@ a {
     flex-direction: column;
 }
 
+#start-button {
+    top: -3px;
+    position: relative;
+}
+
 .btn-3d {
     background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
     color: #fff3f3;
@@ -187,6 +201,11 @@ a {
 #clear-button {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+#guidelines {
+    border-radius: 15px;
+    border: #2e7d32 2px solid;
 }
 
 /* Grid */
@@ -391,7 +410,7 @@ main {
             margin-top: 50px;
         }
 
-        #legend img {
+        #legend-items img {
             width: 25px;
         }
     }

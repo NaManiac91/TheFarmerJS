@@ -1,181 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>The Farmer</title>
-        <meta name="theme-color" content="#3367D6">
-        <link href="css/style.css" rel="stylesheet">
-        <link rel="icon" href="assets/ui/favicon.ico">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="manifest" href="manifest.json">
-    </head>
-    <body>
-        <!-- Pause Overlay -->
-        <div id="pause-overlay" class="overlay">
-            <div id="pause-content">
-                <button id="credits-button" class="btn-3d">Credits</button>
-                <span id="credits-text" class="hidden">
+<head>
+    <meta charset="UTF-8">
+    <title>The Farmer</title>
+    <meta name="theme-color" content="#3367D6">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="icon" href="assets/ui/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+<!-- Pause Overlay -->
+<div id="pause-overlay" class="overlay">
+    <div id="pause-content">
+        <button id="credits-button" class="btn-3d">Credits</button>
+        <span id="credits-text" class="hidden">
                     Sound Effect by <a href="https://mixkit.co/free-sound-effects/">Mixkit</a><br>
                     Icons Designed by <a href="https://freepik.com">Freepik</a><br>
                     Soundtrack Enchanted Valley Kevin MacLeod (incompetech.com)<br>
                     Licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons: By Attribution 3.0 License</a>
                 </span>
-                <button id="resume-button" class="btn-3d">
-                    <span class="eng">Resume</span>
-                    <span class="it">Riprendi</span>
-                </button>
-                <button class="btn-3d restart">
-                    <span class="eng">Restart</span>
-                    <span class="it">Ricomincia</span>
-                </button>
-                <br>
-                <a href="mailto:namaniac91@gmail.com?subject=Game Report&body=Please describe the issue:">
-                    <button class="btn-3d" >
-                        <span class="eng">Report</span>
-                        <span class="it">Segnala</span>
-                    </button>
-                </a>
-            </div>
+        <button id="resume-button" class="btn-3d">
+            <span class="eng">Resume</span>
+            <span class="it">Riprendi</span>
+        </button>
+        <button class="btn-3d restart">
+            <span class="eng">Restart</span>
+            <span class="it">Ricomincia</span>
+        </button>
+        <br>
+        <a href="mailto:namaniac91@gmail.com?subject=Game Report&body=Please describe the issue:">
+            <button class="btn-3d">
+                <span class="eng">Report</span>
+                <span class="it">Segnala</span>
+            </button>
+        </a>
+    </div>
+</div>
+
+<!-- Leaderboard Overlay -->
+<div id="leaderboard-overlay" class="overlay">
+    <div id="leaderboard-content" class="background-round-white">
+        <div id="leaderboard-text">
+
+        </div>
+        <button id="leaderboard-resume-button" class="btn-3d">
+            <span class="eng">Back</span>
+            <span class="it">Indietro</span>
+        </button>
+    </div>
+</div>
+
+<!-- Legend Items Overlay -->
+<div id="legend-overlay" class="overlay">
+    <div id="legend-overlay-content" class="background-round-white">
+        <div id="legend-items">
+            <div><img class="with-border" src="assets/ui/arrow-move.svg" alt="arrow-move"><span class="eng"> Move</span><span class="it"> Muovi</span></div>
+            <div><img class="with-border" src="assets/ui/space-key.svg" alt="space-key"><span class="eng"> Dig</span><span class="it"> Scava</span></div>
+            <div><img src="assets/ui/seedling.svg" alt="seedling"><span> 1</span><span class="eng"> Dig</span><span class="it"> Scava</span></div>
+            <div><img src="assets/ui/wood.svg" alt="wood"><span> 2</span><span class="eng"> Dig</span><span class="it"> Scava</span></div>
+            <div><img src="assets/ui/rock.svg" alt="rock"><span> 3</span><span class="eng"> Dig</span><span class="it"> Scava</span></div>
+            <div><img src="assets/ui/10-seconds.svg" alt="10-seconds"><span class="eng"> + 10 Seconds</span><span class="it"> + 10 Secondi</span></div>
+            <div><img src="assets/ui/spade.svg" alt="spade"><span class="eng"> Win the level</span><span class="it"> Vinci il livello</span></div>
+            <div><img src="assets/ui/heart.svg" alt="heart"><span class="eng"> Extra life</span><span class="it"> Vita extra</span></div>
+            <div><img src="assets/ui/bomb.svg" alt="bomb"><span> KABOOM!!</span></div>
+            <div><img src="assets/ui/wolf.png" alt="bomb"><span> ROAAAR!!</span></div>
+        </div>
+        <button id="legend-resume-button" class="btn-3d">
+            <span class="eng">Back</span>
+            <span class="it">Indietro</span>
+        </button>
+    </div>
+</div>
+
+<!-- UI -->
+<header id="header">
+    <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
+
+    <button id="login-button" class="btn-3d">
+        <span class="eng">Login with Google</span>
+        <span class="it">Login with Google</span>
+    </button>
+
+    <button id="guest-button" class="btn-3d">
+        <span class="eng">Play as Guest</span>
+        <span class="it">Gioca come Ospite</span>
+    </button>
+    <!-- Player definition -->
+    <div id="player" class="hidden">
+        <input type="text" id="player-name" aria-label="player-name" placeholder="Player Name" disabled/>
+        <button id="start-button" class="btn-3d" disabled>
+            <span class="eng">Start</span>
+            <span class="it">Inizia</span>
+        </button>
+    </div>
+    <button id="clear-button" class="btn-3d hidden">
+        <span class="eng">Change Playername</span>
+        <span class="it">Cambia Nome</span>
+    </button>
+
+    <div id="timer" class="hidden">
+        <span id="time"></span>
+        <span id="time-bonus"></span>
+    </div>
+    <div id="extralife" class="hidden"></div>
+</header>
+
+<!-- Game Container -->
+<main id="main" class="hidden">
+    <div id="container"></div>
+
+    <!-- End Game -->
+    <div id="game-over" class="hidden">
+        <p>Game Over!!!</p>
+        <button class="btn-3d restart">
+            <span class="eng">Restart</span>
+            <span class="it">Ricomincia</span>
+        </button>
+    </div>
+</main>
+
+<footer id="footer" class="hidden">
+    <!-- Leaderboard -->
+    <div id="leaderboard" class="hidden">
+        <p id="points"></p>
+        <p id="record"></p>
+    </div>
+
+    <!-- Game Legend -->
+    <div id="legend" class="border-green">
+        <div id="guidelines" class="background-round-white">
+            <ul class="eng">
+                <li>Move the farmer across the grid using pad controls</li>
+                <li>Collect with the action button all the items to complete the level</li>
+                <li>Each level increases in size and complexity</li>
+                <li>Encounter bonus items that help… and malus items that might surprise you!</li>
+                <li>Encounter bonus items that help… and malus items that might surprise you!</li>
+                <li>Work hard, harvest more and become The Farmer Number One!</li>
+            </ul>
+            <ul class="it">
+                <li>Sposta il contadino sulla griglia usando le frecce</li>
+                <li>Raccogli con il tasto azione tutti gli oggetti per completare il livello</li>
+                <li>Ogni livello aumenta in dimensioni e complessità</li>
+                <li>Incontra oggetti bonus che ti aiutano… e malus che potrebbero sorprenderti!</li>
+                <li>Lavora sodo, fai un grande raccolto e diventa il contadino numero uno!</li>
+            </ul>
         </div>
 
-        <!-- Leaderboard Overlay -->
-        <div id="leaderboard-overlay" class="overlay">
-            <div id="leaderboard-content">
-                <div id="leaderboard-text">
+        <button id="legend-button" class="btn-3d">
+            <span class="eng">Show Legend Items</span>
+            <span class="it">Mostra Legenda</span>
+        </button>
+    </div>
+</footer>
 
-                </div>
-                <button id="leaderboard-resume-button" class="btn-3d">
-                    <span class="eng">Back</span>
-                    <span class="it">Indietro</span>
-                </button>
-            </div>
-        </div>
+<!-- Floating elements -->
+<div id="floating">
+    <button id="pause-button" class="hidden">
+        <img src="assets/ui/pause.svg" alt="pause" width="20" height="20">
+    </button>
 
-        <!-- UI -->
-        <header id="header">
-            <img id="logo" src="assets/ui/Logo.jpeg" alt="farmer logo">
+    <button id="sound-button">
+        <img src="assets/ui/volume-up.svg" alt="volume" width="20" height="20">
+    </button>
 
-            <button id="login-button" class="btn-3d">
-                <span class="eng">Login with Google</span>
-                <span class="it">Login with Google</span>
-            </button>
+    <button id="leaderboard-button">
+        <img src="assets/ui/leaderboard.png" alt="leaderboard" width="20" height="20">
+    </button>
 
-            <button id="guest-button" class="btn-3d">
-                <span class="eng">Play as Guest</span>
-                <span class="it">Gioca come Ospite</span>
-            </button>
-            <!-- Player definition -->
-            <div id="player" class="hidden">
-                <input type="text" id="player-name" aria-label="player-name" placeholder="Player Name" disabled/>
-                <button id="start-button" class="btn-3d" disabled>
-                    <span class="eng">Start</span>
-                    <span class="it">Inizia</span>
-                </button>
-            </div>
-            <button id="clear-button" class="btn-3d hidden">
-                <span class="eng">Change Playername</span>
-                <span class="it">Cambia Nome</span>
-            </button>
+    <button id="share-button" class="hidden">
+        <img src="assets/ui/sharethis.svg" alt="share" width="20" height="20">
+    </button>
+</div>
 
-            <div id="timer" class="hidden">
-                <span id="time"></span>
-                <span id="time-bonus"></span>
-            </div>
-            <div id="extralife" class="hidden"></div>
-        </header>
+<!-- Pad for mobile -->
+<div id="pad" class="hidden">
+    <div id="dpad-container">
+        <div id="dpad-up" class="dpad-button">▲</div>
+        <div id="dpad-left" class="dpad-button">◀</div>
+        <div id="dpad-right" class="dpad-button">▶</div>
+        <div id="dpad-down" class="dpad-button">▼</div>
+    </div>
 
-        <!-- Game Container -->
-        <main id="main" class="hidden">
-            <div id="container"></div>
-
-            <!-- End Game -->
-            <div id="game-over" class="hidden">
-                <p>Game Over!!!</p>
-                <button class="btn-3d restart">
-                    <span class="eng">Restart</span>
-                    <span class="it">Ricomincia</span>
-                </button>
-            </div>
-        </main>
-
-        <footer id="footer" class="hidden">
-            <!-- Leaderboard -->
-            <div id="leaderboard" class="hidden">
-                <p id="points"></p>
-                <p id="record"></p>
-            </div>
-
-            <!-- Game Legend -->
-            <div id="legend" class="border-green">
-                <div id="guidelines">
-                    <ul class="eng">
-                        <li>Move the farmer across the grid using pad controls</li>
-                        <li>Collect with the action button all the items to complete the level</li>
-                        <li>Each level increases in size and complexity</li>
-                        <li>Encounter bonus items that help… and malus items that might surprise you!</li>
-                        <li>Encounter bonus items that help… and malus items that might surprise you!</li>
-                        <li>Work hard, harvest more and become The Farmer Number One!</li>
-                    </ul>
-                    <ul class="it">
-                        <li>Sposta il contadino sulla griglia usando le frecce</li>
-                        <li>Raccogli con il tasto azione tutti gli oggetti per completare il livello</li>
-                        <li>Ogni livello aumenta in dimensioni e complessità</li>
-                        <li>Incontra oggetti bonus che ti aiutano… e malus che potrebbero sorprenderti!</li>
-                        <li>Lavora sodo, fai un grande raccolto e diventa il contadino numero uno!</li>
-                    </ul>
-                </div>
-
-                <button id="legend-button" class="btn-3d">
-                    <span class="eng">Show Legend Items</span>
-                    <span class="it">Mostra Legenda</span>
-                </button>
-                <div id="legend-items" class="hidden">
-                    <img class="with-border" src="assets/ui/arrow-move.svg" alt="arrow-move"><span class="eng"> Move</span><span class="it"> Muovi</span>
-                    <img class="with-border" src="assets/ui/space-key.svg" alt="space-key"><span class="eng"> Dig</span><span class="it"> Scava</span>
-                    <img src="assets/ui/seedling.svg" alt="seedling"><span> 1</span><span class="eng"> Dig</span><span class="it"> Scava</span>
-                    <img src="assets/ui/wood.svg" alt="wood"><span> 2</span><span class="eng"> Dig</span><span class="it"> Scava</span>
-                    <img src="assets/ui/rock.svg" alt="rock"><span> 3</span><span class="eng"> Dig</span><span class="it"> Scava</span>
-                    <img src="assets/ui/10-seconds.svg" alt="10-seconds"><span class="eng"> + 10 Seconds</span><span class="it"> + 10 Secondi</span>
-                    <img src="assets/ui/spade.svg" alt="spade"><span class="eng"> Win the level</span><span class="it"> Vinci il livello</span>
-                    <img src="assets/ui/heart.svg" alt="heart"><span class="eng"> Extra life</span><span class="it"> Vita extra</span>
-                    <img src="assets/ui/bomb.svg" alt="bomb"><span> KABOOM!!</span>
-                    <img src="assets/ui/wolf.png" alt="bomb"><span> ROAAAR!!</span>
-                </div>
-            </div>
-        </footer>
-
-        <!-- Floating elements -->
-        <div id="floating">
-            <button id="pause-button" class="hidden">
-                <img src="assets/ui/pause.svg" alt="pause" width="20" height="20">
-            </button>
-
-            <button id="sound-button">
-                <img src="assets/ui/volume-up.svg" alt="volume" width="20" height="20">
-            </button>
-
-            <button id="leaderboard-button">
-                <img src="assets/ui/leaderboard.png" alt="leaderboard" width="20" height="20">
-            </button>
-
-            <button id="share-button" class="hidden">
-                <img src="assets/ui/sharethis.svg" alt="share" width="20" height="20">
-            </button>
-        </div>
-
-        <!-- Pad for mobile -->
-        <div id="pad" class="hidden">
-            <div id="dpad-container">
-                <div id="dpad-up" class="dpad-button">▲</div>
-                <div id="dpad-left" class="dpad-button">◀</div>
-                <div id="dpad-right" class="dpad-button">▶</div>
-                <div id="dpad-down" class="dpad-button">▼</div>
-            </div>
-
-            <div id="action-buttons">
-                <button id="button-a">␣</button>
-            </div>
-        </div>
-    </body>
+    <div id="action-buttons">
+        <button id="button-a">␣</button>
+    </div>
+</div>
+</body>
 </html>
 <script type="module" src="scripts/client/index.js"></script>

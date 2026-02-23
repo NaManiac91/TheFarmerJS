@@ -5,7 +5,21 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "scripts/server/**",
+      "Deploy/**",
+      "app/**",
+      "build/**",
+      "gradle/**",
+      "*.apk",
+      "*.aab",
+      "*.idsig",
+      "**/*.keystore",
+      "**/serviceAccountKey.json",
+      "**/.env",
+      "**/.env.*",
+      "twa-manifest.json",
+      "manifest-checksum.txt"
     ],
     "rewrites": [
       {

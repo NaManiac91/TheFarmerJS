@@ -77,11 +77,14 @@ export async function upsertPlayer(googleId, playerName, email, score) {
             $set: {
                 playerName,
                 email,
-                score,
                 updatedAt: new Date()
             },
+            $max: {
+                score
+            },
             $setOnInsert: {
-                createdAt: new Date()
+                createdAt: new Date(),
+                score: 0
             }
         },
         { upsert: true }

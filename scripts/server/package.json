@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "esbuild api-server.mjs --bundle --platform=node --format=esm --packages=external --outfile=dist/server.mjs --minify --external:node:*",
-    "start": "node dist/server.mjs",
+    "start": "node api-server.mjs",
     "dev": "node api-server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
